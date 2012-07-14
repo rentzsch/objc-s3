@@ -21,7 +21,7 @@
 // C-string, as it is only used in Keychain Services
 #define S3_BROWSER_KEYCHAIN_SERVICE "S3 Browser"
 
-@interface S3ApplicationDelegate () <S3ConnectionInfoDelegate>
+@interface S3ApplicationDelegate () <S3ConnectionInfoDelegate, S3OperationQueueDelegate>
 @property (nonatomic) S3LoginController* loginController;
 @end
 

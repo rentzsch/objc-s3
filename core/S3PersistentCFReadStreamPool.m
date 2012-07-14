@@ -3,6 +3,7 @@
 //  S3-Objc
 //
 //  Created by Michael Ledford on 7/29/08.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2008 Michael Ledford. All rights reserved.
 //
 
@@ -23,7 +24,11 @@ static NSString *S3DateKey = @"S3DateKey";
 - (void)disarmCleanPoolTimer;
 @end
 
-@implementation S3PersistentCFReadStreamPool
+@implementation S3PersistentCFReadStreamPool {
+    NSMutableDictionary *_activePersistentReadStreams;
+    NSMutableArray *_overflow;
+    NSTimer *_cleanPoolTimer;
+}
 
 - (id)init
 {

@@ -3,12 +3,12 @@
 //  S3-Objc
 //
 //  Created by Olivier Gutknecht on 3/31/06.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2006 Olivier Gutknecht. All rights reserved.
 //
 
 #import "S3Extensions.h"
-#import <openssl/ssl.h>
-#import <openssl/hmac.h>
+#import <CommonCrypto/CommonCrypto.h>
 
 @implementation NSArray (Comfort)
 
@@ -47,17 +47,18 @@
 	return a;
 }
 
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 - (BOOL)hasObjectSatisfying:(SEL)aSelector withArgument:(id)argument;
 {
-    NSEnumerator *e = [self objectEnumerator];
-    id o;
-    while (o = [e nextObject])
+    for(id object in self)
     {
-        if ([o performSelector:aSelector withObject:argument])
-            return TRUE;
+        if ([object performSelector:aSelector withObject:argument]) {
+            return YES;
+        }
     }
-    return FALSE;
+    
+    return NO;
 }
 
 @end
@@ -149,45 +150,52 @@
 @end
 
 
-@implementation NSData (OpenSSLWrapper)
+@implementation NSData (CommonCryptoWrapper)
 
 - (NSData *)md5Digest
 {
-	EVP_MD_CTX mdctx;
-	unsigned char md_value[EVP_MAX_MD_SIZE];
-	unsigned int md_len;
-	EVP_DigestInit(&mdctx, EVP_md5());
-	EVP_DigestUpdate(&mdctx, [self bytes], [self length]);
-	EVP_DigestFinal(&mdctx, md_value, &md_len);
-	return [NSData dataWithBytes:md_value length:md_len];
+    CFErrorRef error = NULL;
+    
+    SecTransformRef digestRef = SecDigestTransformCreate(kSecDigestMD5, 0, &error);
+    SecTransformSetAttribute(digestRef, kSecTransformInputAttributeName, (__bridge CFDataRef)self, &error);
+    CFDataRef resultData = SecTransformExecute(digestRef, &error);
+    
+    NSData* bridgedData = (__bridge_transfer NSData*)resultData;
+    CFRelease(digestRef);
+    
+    return bridgedData;
 }
 
 - (NSData *)sha1Digest
 {
-	EVP_MD_CTX mdctx;
-	unsigned char md_value[EVP_MAX_MD_SIZE];
-	unsigned int md_len;
-	EVP_DigestInit(&mdctx, EVP_sha1());
-	EVP_DigestUpdate(&mdctx, [self bytes], [self length]);
-	EVP_DigestFinal(&mdctx, md_value, &md_len);
-	return [NSData dataWithBytes:md_value length:md_len];
+    CFErrorRef error = NULL;
+    
+    SecTransformRef digestRef = SecDigestTransformCreate(kSecDigestSHA1, 0, &error);
+    SecTransformSetAttribute(digestRef, kSecTransformInputAttributeName, (__bridge CFDataRef)self, &error);
+    CFDataRef resultData = SecTransformExecute(digestRef, &error);
+    
+    NSData* bridgedData = (__bridge_transfer NSData*)resultData;
+    CFRelease(digestRef);
+    
+    return bridgedData;
 }
 
 - (NSData *)sha1HMacWithKey:(NSString *)key
 {
-	HMAC_CTX mdctx;
-	unsigned char md_value[EVP_MAX_MD_SIZE];
-	unsigned int md_len;
-	const char* k = [key cStringUsingEncoding:NSUTF8StringEncoding];
-	const unsigned char *data = [self bytes];
-	int len = [self length];
-	
-	HMAC_CTX_init(&mdctx);
-	HMAC_Init(&mdctx,k,strlen(k),EVP_sha1());
-	HMAC_Update(&mdctx,data, len);
-	HMAC_Final(&mdctx, md_value, &md_len);
-	HMAC_CTX_cleanup(&mdctx);
-	return [NSData dataWithBytes:md_value length:md_len];
+	CFErrorRef error = NULL;
+    
+    NSData* keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    SecTransformRef digestRef = SecDigestTransformCreate(kSecDigestHMACSHA1, 0, &error);
+    SecTransformSetAttribute(digestRef, kSecDigestHMACKeyAttribute, (__bridge CFDataRef)keyData, &error);
+    SecTransformSetAttribute(digestRef, kSecTransformInputAttributeName, (__bridge CFDataRef)self, &error);
+    
+    CFDataRef resultData = SecTransformExecute(digestRef, &error);
+    
+    NSData* bridgedData = (__bridge_transfer NSData*)resultData;
+    CFRelease(digestRef);
+    
+    return bridgedData;
 }
 	
 - (NSString *)encodeBase64
@@ -197,26 +205,22 @@
 
 - (NSString *) encodeBase64WithNewlines:(BOOL) encodeWithNewlines
 {
-    BIO *mem = BIO_new(BIO_s_mem());
-	BIO *b64 = BIO_new(BIO_f_base64());
-    if (!encodeWithNewlines)
-        BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-    mem = BIO_push(b64, mem);
+    CFErrorRef error = NULL;
+    
+    SecTransformRef encodingRef = SecEncodeTransformCreate(kSecBase64Encoding, &error);
+    SecTransformSetAttribute(encodingRef, kSecTransformInputAttributeName, (__bridge CFDataRef)self, &error);
+    CFDataRef resultData = SecTransformExecute(encodingRef, &error);
+    
+    NSString *base64String = [[NSString alloc] initWithData:(__bridge NSData*)resultData encoding:NSASCIIStringEncoding];
+    
+    CFRelease(encodingRef);
+    CFRelease(resultData);
 
-	BIO_write(mem, [self bytes], [self length]);
-    BIO_flush(mem);
-		
-	char *base64Pointer;
-    long base64Length = BIO_get_mem_data(mem, &base64Pointer);
-		
-	NSString *base64String = [[NSString alloc] initWithBytes:base64Pointer length:base64Length encoding:NSASCIIStringEncoding];
-		
-	BIO_free_all(mem);
     return base64String;
 }
 @end
 
-@implementation NSString (OpenSSLWrapper)
+@implementation NSString (CommonCryptoWrapper)
 
 - (NSData *)decodeBase64;
 {
@@ -225,26 +229,23 @@
 
 - (NSData *)decodeBase64WithNewlines:(BOOL)encodedWithNewlines;
 {
-    BIO *mem = BIO_new_mem_buf((void *) [self UTF8String], strlen([self UTF8String]));
+    CFErrorRef error = NULL;
     
-    BIO *b64 = BIO_new(BIO_f_base64());
-    if (!encodedWithNewlines)
-        BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-    mem = BIO_push(b64, mem);
+    NSData* inputData = [self dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSMutableData *data = [NSMutableData data];
-    char inbuf[512];
-    int inlen;
-    while ((inlen = BIO_read(mem, inbuf, sizeof(inbuf))) > 0)
-        [data appendBytes:inbuf length:inlen];
+    SecTransformRef decodingRef = SecDecodeTransformCreate(kSecBase64Encoding, &error);
+    SecTransformSetAttribute(decodingRef, kSecTransformInputAttributeName, (__bridge CFDataRef)inputData, &error);
+    CFDataRef resultData = SecTransformExecute(decodingRef, &error);
     
-    BIO_free_all(mem);
-    return data;
+    NSData* bridgedData = (__bridge_transfer NSData*)resultData;
+    CFRelease(decodingRef);
+
+    return bridgedData;
 }
 
 - (NSNumber *)fileSizeForPath
 {
-	NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:self traverseLink:YES];
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self error:nil];;
 	if (fileAttributes==nil)
 		return @0LL;
     else
@@ -253,7 +254,7 @@
 
 - (NSString *)readableSizeForPath
 {
-	NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:self traverseLink:YES];
+	NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self error:nil];
 	if (fileAttributes==nil)
 		return @"Unknown";
 	
@@ -289,7 +290,7 @@
 	
 	for (path in files)
 	{
-		NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+		NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
 		if (fileAttributes!=nil)
 			total = total + [[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];				
 	}

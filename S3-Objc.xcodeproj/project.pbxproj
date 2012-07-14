@@ -20,7 +20,6 @@
 		65CDE92B0C1050BE007CB0EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		65CDE9860C1050EC007CB0EF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		65CDE9870C1050ED007CB0EF /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
-		65CDE9880C1050F6007CB0EF /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7765E31309E726830075B66B /* libssl.dylib */; };
 		65CDE9890C1050FA007CB0EF /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7765E31709E726CA0075B66B /* libcrypto.dylib */; };
 		65CDE98A0C105100007CB0EF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777D0D2C0A332CB4003CABA0 /* Security.framework */; };
 		65CDE9A00C10534C007CB0EF /* S3Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7794949A09DD9B2300A5DEB7 /* S3Extensions.m */; };
@@ -36,7 +35,6 @@
 		77538C0F09EB36E80024FB3B /* info.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77538C0B09EB36E80024FB3B /* info.icns */; };
 		77538C3D09EB387E0024FB3B /* refresh.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77538C3C09EB387E0024FB3B /* refresh.icns */; };
 		77538C6909EB3DCB0024FB3B /* S3AppKitExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 77538C6809EB3DCB0024FB3B /* S3AppKitExtensions.m */; };
-		7765E31409E726830075B66B /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7765E31309E726830075B66B /* libssl.dylib */; };
 		7765E31809E726CA0075B66B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7765E31709E726CA0075B66B /* libcrypto.dylib */; };
 		7777EB2C09C7923500EC8148 /* S3Owner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7777EB2B09C7923500EC8148 /* S3Owner.m */; };
 		7777EB3409C7929900EC8148 /* S3Object.m in Sources */ = {isa = PBXBuildFile; fileRef = 7777EB3309C7929900EC8148 /* S3Object.m */; };
@@ -126,7 +124,6 @@
 		77538C3C09EB387E0024FB3B /* refresh.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = refresh.icns; path = Resources/refresh.icns; sourceTree = "<group>"; };
 		77538C6709EB3DCB0024FB3B /* S3AppKitExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = S3AppKitExtensions.h; sourceTree = "<group>"; };
 		77538C6809EB3DCB0024FB3B /* S3AppKitExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = S3AppKitExtensions.m; sourceTree = "<group>"; };
-		7765E31309E726830075B66B /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = /usr/lib/libssl.dylib; sourceTree = "<absolute>"; };
 		7765E31709E726CA0075B66B /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		7777EB2A09C7923500EC8148 /* S3Owner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = S3Owner.h; sourceTree = "<group>"; };
 		7777EB2B09C7923500EC8148 /* S3Owner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = S3Owner.m; sourceTree = "<group>"; };
@@ -206,7 +203,6 @@
 				65CDE92B0C1050BE007CB0EF /* Cocoa.framework in Frameworks */,
 				65CDE9860C1050EC007CB0EF /* Foundation.framework in Frameworks */,
 				65CDE9870C1050ED007CB0EF /* AppKit.framework in Frameworks */,
-				65CDE9880C1050F6007CB0EF /* libssl.dylib in Frameworks */,
 				65CDE9890C1050FA007CB0EF /* libcrypto.dylib in Frameworks */,
 				65CDE98A0C105100007CB0EF /* Security.framework in Frameworks */,
 			);
@@ -217,7 +213,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				7765E31409E726830075B66B /* libssl.dylib in Frameworks */,
 				7765E31809E726CA0075B66B /* libcrypto.dylib in Frameworks */,
 				777D0D2D0A332CB4003CABA0 /* Security.framework in Frameworks */,
 				306299E50A953E0A00634B34 /* SystemConfiguration.framework in Frameworks */,
@@ -247,7 +242,6 @@
 				306299E40A953E0A00634B34 /* SystemConfiguration.framework */,
 				777D0D2C0A332CB4003CABA0 /* Security.framework */,
 				7765E31709E726CA0075B66B /* libcrypto.dylib */,
-				7765E31309E726830075B66B /* libssl.dylib */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";

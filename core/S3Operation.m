@@ -24,7 +24,7 @@
 
 @end
 
-@interface S3Operation ()
+@interface S3Operation () <S3TransferRateCalculatorDelegate, S3HTTPUrlBuilderDelegate>
 @property(readwrite, nonatomic, copy) S3ConnectionInfo *connectionInfo;
 @property(readwrite, nonatomic, copy) NSDictionary *operationInfo;
 

@@ -3,10 +3,12 @@
 //  S3-Objc
 //
 //  Created by Olivier Gutknecht on 04/02/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Modernized by Martin Hering on 07/14/12
+//  Copyright 2007 Olivier Gutknecht. All rights reserved.
 //
 
 #import "S3OperationQueue.h"
+#import "S3Operation.h"
 #import "S3Extensions.h"
 
 #define MAX_ACTIVE_OPERATIONS 4
@@ -20,14 +22,19 @@ NSString *S3OperationQueueOperationInformationalSubStatusDidChangeNotification =
 NSString *S3OperationObjectKey = @"S3OperationObjectKey";
 NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 
-@interface S3OperationQueue (PrivateAPI)
+@interface S3OperationQueue () <S3OperationDelegate>
 - (void)removeFromCurrentOperations:(S3Operation *)op;
 - (void)startQualifiedOperations:(NSTimer *)timer;
 - (void)rearmTimer;
 - (void)disarmTimer;
+@property (nonatomic, weak) id<S3OperationQueueDelegate> delegate;
 @end
 
-@implementation S3OperationQueue
+@implementation S3OperationQueue {
+	NSMutableArray *_currentOperations;
+    NSMutableArray *_activeOperations;
+	NSTimer *_timer;
+}
 
 - (id)initWithDelegate:(id)delegate
 {

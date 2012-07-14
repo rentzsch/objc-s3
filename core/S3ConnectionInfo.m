@@ -32,7 +32,7 @@ NSString *S3HeaderPrefixString = @"x-amz";
 
 @interface S3ConnectionInfo ()
 
-@property (nonatomic, readwrite) id<S3ConnectionInfoDelegate> delegate;
+@property (nonatomic, readwrite, weak) id<S3ConnectionInfoDelegate> delegate;
 @property (nonatomic, readwrite) BOOL secureConnection;
 @property (nonatomic, readwrite) NSUInteger portNumber;
 @property (nonatomic, readwrite) NSString* hostEndpoint;

@@ -22,7 +22,7 @@
 - (id)initWithDelegate:(id<S3ConnectionInfoDelegate>)delegate userInfo:(id)userInfo secureConnection:(BOOL)secureConnection portNumber:(NSUInteger)portNumber virtuallyHosted:(BOOL)virtuallyHosted;
 - (id)initWithDelegate:(id<S3ConnectionInfoDelegate>)delegate userInfo:(id)userInfo secureConnection:(BOOL)secureConnection portNumber:(NSUInteger)portNumber virtuallyHosted:(BOOL)virtuallyHosted hostEndpoint:(NSString *)host;
 
-@property (nonatomic, readonly) id<S3ConnectionInfoDelegate> delegate;
+@property (nonatomic, readonly, weak) id<S3ConnectionInfoDelegate> delegate;
 @property (nonatomic, readonly) BOOL secureConnection;
 @property (nonatomic, readonly) NSUInteger portNumber;
 @property (nonatomic, readonly) NSString* hostEndpoint;

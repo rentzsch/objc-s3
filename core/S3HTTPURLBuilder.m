@@ -3,15 +3,14 @@
 //  S3-Objc
 //
 //  Created by Michael Ledford on 8/10/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Modernized by Martin Hering on 07/14/12
+//  Copyright 2008 Michael Ledford. All rights reserved.
 //
 
 #import "S3HTTPUrlBuilder.h"
 
 
 @implementation S3HTTPURLBuilder
-
-@synthesize delegate;
 
 - (id)initWithDelegate:(id)theDelegate
 {
