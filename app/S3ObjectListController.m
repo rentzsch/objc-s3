@@ -34,14 +34,23 @@
 #define FILEDATA_TYPE @"mime"
 #define FILEDATA_SIZE @"size"
 
+@interface S3ObjectListController () <NSToolbarDelegate>
+
+@end
+
+
 @implementation S3ObjectListController
 
 #pragma mark -
 #pragma mark Toolbar management
 
-+ (void)initialize
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
 {
-    [self setKeys:@[@"validList"] triggerChangeNotificationsForDependentKey:@"validListString"];
+    if ([key isEqual:@"validListString"]) {
+        return [NSSet setWithObject:@"validList"];
+    }
+    
+    return nil;
 }
 
 - (void)awakeFromNib
@@ -176,7 +185,7 @@
 - (void)operationQueueOperationStateDidChange:(NSNotification *)notification
 {
     S3Operation *op = [[notification userInfo] objectForKey:S3OperationObjectKey];
-    unsigned index = [_operations indexOfObjectIdenticalTo:op];
+    NSUInteger index = [_operations indexOfObjectIdenticalTo:op];
     if (index == NSNotFound) {
         return;
     }
@@ -275,7 +284,7 @@
 - (IBAction)remove:(id)sender
 {
     S3Object *b;
-    int count = [[_objectsController selectedObjects] count];
+    NSUInteger count = [[_objectsController selectedObjects] count];
 
     if (count>=10)
     {
@@ -309,7 +318,7 @@
     while (b = [e nextObject])
     {
         NSSavePanel *sp = [NSSavePanel savePanel];
-        int runResult;
+        NSInteger runResult = 0;
         NSString *n = [[b key] lastPathComponent];
         if (n==nil) n = @"Untitled";
         runResult = [sp runModalForDirectory:nil file:n];
@@ -337,7 +346,7 @@
         return;        
     }
     
-    NSMutableDictionary *dataSourceInfo = nil;
+    NSDictionary *dataSourceInfo = nil;
     NSString *md5 = nil;
     if ([size longLongValue] < (1024 * 16)) {
         NSData *bodyData = [NSData dataWithContentsOfFile:path];

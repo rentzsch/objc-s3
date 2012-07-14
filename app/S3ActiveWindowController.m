@@ -29,7 +29,7 @@
 - (void)operationQueueOperationStateDidChange:(NSNotification *)notification
 {
     S3Operation *operation = [[notification userInfo] objectForKey:S3OperationObjectKey];
-    unsigned index = [_operations indexOfObjectIdenticalTo:operation];
+    NSUInteger index = [_operations indexOfObjectIdenticalTo:operation];
     if (index == NSNotFound) {
         return;
     }
@@ -87,7 +87,7 @@
     }
     
     if ([_redirectConnectionInfoMappings objectForKey:[operation connectionInfo]]) {
-        int activeConnectionInfos = 0;
+        NSInteger activeConnectionInfos = 0;
         for (S3Operation *currentOperation in _operations) {
             if ([[currentOperation connectionInfo] isEqual:[operation connectionInfo]]) {
                 activeConnectionInfos++;

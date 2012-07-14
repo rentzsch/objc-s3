@@ -294,16 +294,16 @@
 	if (_objective > 0 && _totalTransfered > 0) {
 		// 
 		NSTimeInterval estimatedSeconds = (_objective - _totalTransfered) / (_totalTransfered / [_lastUpdateTime timeIntervalSinceDate:_startTime]);
-		int days = estimatedSeconds / 86400;
+		NSInteger days = estimatedSeconds / 86400;
 		estimatedSeconds = estimatedSeconds - (days * 86400);
-		int hours = estimatedSeconds / 3600;
+		NSInteger hours = estimatedSeconds / 3600;
 		estimatedSeconds = estimatedSeconds - (hours * 3600);
-		int minutes = estimatedSeconds / 60;
+		NSInteger minutes = estimatedSeconds / 60;
 		estimatedSeconds = estimatedSeconds - (minutes * 60);
-		int seconds = estimatedSeconds - 0;
+		NSInteger seconds = estimatedSeconds - 0;
 		NSMutableString *timeRemaining = [NSMutableString string];
 		if (days > 0) {
-			[timeRemaining appendFormat:@"%d ", days];
+			[timeRemaining appendFormat:@"%ld ", (long)days];
 			if (days == 1) {
 				[timeRemaining appendFormat:@"day"];
 			} else {
@@ -315,23 +315,23 @@
 		}
         if (hours > 0) {
             if (hours < 10) {
-                [timeRemaining appendFormat:@"%dh:", hours];                
+                [timeRemaining appendFormat:@"%ldh:", (long)hours];                
             } else {
-                [timeRemaining appendFormat:@"%.2dh:", hours];                
+                [timeRemaining appendFormat:@"%.2ldh:", (long)hours];                
             }
         }
         if (hours > 0 || minutes > 0) {
             if (hours == 0 && minutes < 10) {
-                [timeRemaining appendFormat:@"%dm:", minutes];                
+                [timeRemaining appendFormat:@"%ldm:", (long)minutes];                
             } else {
-                [timeRemaining appendFormat:@"%.2dm:", minutes];                
+                [timeRemaining appendFormat:@"%.2ldm:", (long)minutes];                
             }
         }
         if (hours > 0 || minutes > 0 || seconds > 0) {
             if (hours == 0 && minutes == 0 && seconds < 10) {
-                [timeRemaining appendFormat:@"%ds", seconds];                
+                [timeRemaining appendFormat:@"%lds", (long)seconds];                
             } else {
-                [timeRemaining appendFormat:@"%.2ds", seconds];                
+                [timeRemaining appendFormat:@"%.2lds", (long)seconds];
             }
         }
 		_timeRemaining = [[NSString alloc] initWithString:timeRemaining];

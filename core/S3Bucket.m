@@ -102,7 +102,7 @@
     _name = [aName retain];
 }
 
-- (unsigned)hash
+- (NSUInteger)hash
 {
     return [_name hash];
 }

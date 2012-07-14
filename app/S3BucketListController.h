@@ -22,7 +22,7 @@
 
     IBOutlet NSWindow *addSheet;
     NSString *_name;
-    int _location;
+    NSInteger _location;
     
     NSMutableDictionary *_bucketListControllerCache;
 }

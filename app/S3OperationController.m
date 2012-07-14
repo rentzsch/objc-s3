@@ -13,6 +13,11 @@
 #pragma mark -
 #pragma mark The operation console/inspector itself
 
+@interface S3OperationController () <NSToolbarDelegate>
+
+@end
+
+
 @implementation S3OperationController
 
 + (void)initialize

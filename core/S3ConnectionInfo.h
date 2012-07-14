@@ -16,7 +16,7 @@
     id _delegate;               // A delegate is required.
     NSDictionary *_userInfo;    // Contributes to equality.
     BOOL _secure;               // Insecure by default.
-    int _portNumber;            // Uses default port if 0 depending on secureConnection state.
+    NSInteger _portNumber;            // Uses default port if 0 depending on secureConnection state.
     BOOL _virtuallyHosted;      // Determines how connection requests are formed.
     NSString *_host;            // For a host other than the default Amazon S3 host endpoint.
 }

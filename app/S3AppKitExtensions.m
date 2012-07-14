@@ -25,7 +25,7 @@
 
 - (NSString *)httpStatus
 {
-	return [NSString stringWithFormat:@"%d (%@)",[self statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[self statusCode]]];
+	return [NSString stringWithFormat:@"%d (%@)",(int)[self statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[self statusCode]]];
 }
 
 - (NSArray *)headersReceived

@@ -24,11 +24,11 @@
 - (id)transformedValue:(id)data
 {
 	if ([data length]>4096)
-		return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%u bytes in raw data response",[data length]]] autorelease];
+		return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu bytes in raw data response",(unsigned long)[data length]]] autorelease];
 	
 	NSString *s = [[[NSString alloc] initWithData:data encoding:NSNonLossyASCIIStringEncoding] autorelease];
 	if (s==nil)
-		return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%u bytes in raw data response",[data length]]] autorelease];
+		return [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu bytes in raw data response",(unsigned long)[data length]]] autorelease];
 	return [[[NSAttributedString alloc] initWithString:s] autorelease];	
 }
 

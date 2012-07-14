@@ -105,9 +105,13 @@ static void myReleaseCallback(void *info) {
     return NO;
 }
 
-+ (void)initialize
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
 {
-    [self setKeys:@[@"state"] triggerChangeNotificationsForDependentKey:@"active"];
+    if ([key isEqual:@"active"]) {
+        return [NSSet setWithObject:@"state"];
+    }
+    
+    return nil;
 }
 
 - (id)initWithConnectionInfo:(S3ConnectionInfo *)aConnectionInfo operationInfo:(NSDictionary *)anOperationInfo

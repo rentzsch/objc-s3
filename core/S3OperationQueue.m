@@ -167,9 +167,9 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 
 - (int)canAcceptPendingOperations
 {
-	int available = MAX_ACTIVE_OPERATIONS; // fallback
+	NSInteger available = MAX_ACTIVE_OPERATIONS; // fallback
     if (_delegate && [_delegate respondsToSelector:@selector(maximumNumberOfSimultaneousOperationsForOperationQueue:)]) {
-        int maxNumber = [_delegate maximumNumberOfSimultaneousOperationsForOperationQueue:self];
+        NSInteger maxNumber = [_delegate maximumNumberOfSimultaneousOperationsForOperationQueue:self];
         if ((maxNumber > 0) && (maxNumber < 100)) { // Let's be reasonable
             available = maxNumber;
         }
@@ -220,7 +220,7 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 
 - (void)startQualifiedOperations:(NSTimer *)timer
 {
-	int slotsAvailable = [self canAcceptPendingOperations];
+	NSInteger slotsAvailable = [self canAcceptPendingOperations];
 	S3Operation *o;
 
     if (slotsAvailable == 0) {

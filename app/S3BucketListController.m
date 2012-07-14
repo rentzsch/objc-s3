@@ -27,6 +27,11 @@ enum {
     EUIrelandLocation = 2
 };
 
+
+@interface S3BucketListController () <NSToolbarDelegate>
+
+@end
+
 @implementation S3BucketListController
 
 #pragma mark -
@@ -125,7 +130,7 @@ enum {
 - (void)operationQueueOperationStateDidChange:(NSNotification *)notification
 {
     S3Operation *operation = [[notification userInfo] objectForKey:S3OperationObjectKey];
-    unsigned index = [_operations indexOfObjectIdenticalTo:operation];
+    NSUInteger index = [_operations indexOfObjectIdenticalTo:operation];
     if (index == NSNotFound) {
         return;
     }
@@ -219,10 +224,10 @@ enum {
     while (b = [e nextObject])
     {
         S3ObjectListController *c = nil;
-        if (c = [_bucketListControllerCache objectForKey:b]) {
+        if ((c = [_bucketListControllerCache objectForKey:b])) {
             [c showWindow:self];
         } else {
-            c = [[S3ObjectListController alloc] initWithWindowNibName:@"Objects"];
+            c = [[[S3ObjectListController alloc] initWithWindowNibName:@"Objects"] autorelease];
             [c setBucket:b];
 
             [c setConnectionInfo:[self connectionInfo]];
@@ -236,8 +241,13 @@ enum {
 #pragma mark -
 #pragma mark Key-value coding
 
-+ (void)initialize {
-    [self setKeys:@[@"name"] triggerChangeNotificationsForDependentKey:@"isValidName"];
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key
+{
+    if ([key isEqual:@"isValidName"]) {
+        return [NSSet setWithObject:@"name"];
+    }
+    
+    return nil;
 }
 
 - (NSString *)name

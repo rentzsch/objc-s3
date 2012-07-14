@@ -72,7 +72,7 @@
     NSMutableString *s = [NSMutableString string];
     NSArray *keys = [self allKeys];
     NSString *k;
-    int i;
+    NSInteger i;
 
     k = [keys objectAtIndex:0];
     [s appendString:@"?"];
@@ -349,11 +349,13 @@
 			for (j = 1; j < sLength; j++) {
 				NSString* compareString = [strings objectAtIndex:j];
 				
-				if ([compareString characterAtIndex:i] != c)
-					if (i == 0)
+				if ([compareString characterAtIndex:i] != c) {
+					if (i == 0) {
 						return @"";
-					else
+					} else {
 						return [prefix substringToIndex:i];
+                    }
+                }
 			}
 		}
 		

@@ -16,7 +16,7 @@
 #define S3_BROWSER_KEYCHAIN_SERVICE "S3 Browser"
 
 
-@interface S3LoginController ()
+@interface S3LoginController () <NSWindowDelegate>
 
 - (NSString *)getS3SecretKeyFromKeychainForS3AccessKey:(NSString *)accesskey;
 - (BOOL)setS3SecretKeyToKeychainForS3AccessKey:(NSString *)accesskey password:(NSString *)secretkey;
@@ -82,7 +82,7 @@
 
     [super operationQueueOperationStateDidChange:notification];
 
-    if ([operation state] == S3OperationDone) {
+    if ([operation state] == S3OperationDone && [operation isKindOfClass:[S3ListBucketOperation class]]) {
 
         if ([_keychainCheckbox state] == NSOnState) {
             [self setS3SecretKeyToKeychainForS3AccessKey:accessKeyID password:secretAccessKeyID];

@@ -381,7 +381,7 @@ NSString *S3HeaderPrefixString = @"x-amz";
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@: %#x -\n delegate:%#x\n userInfo:%@\n secureConnection:%d\n portNumber:%d\n virtuallyHosted:%d\n hostEndpoint:%@\n>", [self class], self, [self delegate], [self userInfo], [self secureConnection], [self portNumber], [self virtuallyHosted], [self hostEndpoint]];
+    return [NSString stringWithFormat:@"<%@: %#x -\n delegate:%#x\n userInfo:%@\n secureConnection:%d\n portNumber:%d\n virtuallyHosted:%d\n hostEndpoint:%@\n>", [self class], (unsigned int)self, (unsigned int)[self delegate], [self userInfo], [self secureConnection], [self portNumber], [self virtuallyHosted], [self hostEndpoint]];
 }
 
 @end
