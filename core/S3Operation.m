@@ -45,7 +45,7 @@
 @property(readwrite, nonatomic, copy) NSDictionary *responseHeaders;
 @property(readwrite, nonatomic, copy) NSNumber *responseStatusCode;
 @property(readwrite, nonatomic, copy) NSData *responseData;
-@property(readwrite, nonatomic, retain) NSFileHandle *responseFileHandle;
+@property(readwrite, nonatomic, strong) NSFileHandle *responseFileHandle;
 @property(readwrite, nonatomic, copy) NSError *error;
 @property(readwrite, nonatomic, assign) NSInteger queuePosition;
 
@@ -65,16 +65,16 @@ static const CFOptionFlags S3OperationNetworkEvents =   kCFStreamEventOpenComple
 static void
 ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *clientCallBackInfo) {
     // Pass off to the object to handle
-    [((S3Operation *)clientCallBackInfo) handleNetworkEvent:type];
+    [((__bridge S3Operation *)clientCallBackInfo) handleNetworkEvent:type];
 }
 
-static void *myRetainCallback(void *info) {
-    return (void *)[(NSObject *)info retain];
-}
-
-static void myReleaseCallback(void *info) {
-    [(NSObject *)info release];
-}
+//static void *myRetainCallback(void *info) {
+//    return (void *)[(__bridge NSObject *)info retain];
+//}
+//
+//static void myReleaseCallback(void *info) {
+//    [(__bridge NSObject *)info release];
+//}
 
 
 #pragma mark -
@@ -120,7 +120,6 @@ static void myReleaseCallback(void *info) {
     
     if (self != nil) {
         if (aConnectionInfo == nil) {
-            [self release];
             return nil;
         }
         [self setConnectionInfo:aConnectionInfo];
@@ -143,20 +142,10 @@ static void myReleaseCallback(void *info) {
     [self removeObserver:self forKeyPath:@"informationalStatus"];
     [self removeObserver:self forKeyPath:@"informationalSubStatus"];
     
-    [connectionInfo release];
-    [_date release];
     if (httpOperationReadStream != NULL) {
         CFRelease(httpOperationReadStream);        
     }
-    [responseHeaders release];
-    [responseData release];
-    [responseFileHandle release];
-    [informationalStatus release];
-    [informationalSubStatus release];
-    [rateCalculator release];
-    [error release];
 
-	[super dealloc];
 }
 
 - (S3OperationState)state
@@ -379,7 +368,6 @@ static void myReleaseCallback(void *info) {
     // Make Request String
     S3HTTPURLBuilder *urlBuilder = [[S3HTTPURLBuilder alloc] initWithDelegate:self];
     NSURL *builtURL = [urlBuilder url];
-    [urlBuilder release];
 
     return builtURL;
 }
@@ -458,7 +446,7 @@ static void myReleaseCallback(void *info) {
     }
 
     if (inputStream != nil) {
-        httpOperationReadStream = CFReadStreamCreateForStreamedHTTPRequest(kCFAllocatorDefault, httpRequest, (CFReadStreamRef)inputStream);        
+        httpOperationReadStream = CFReadStreamCreateForStreamedHTTPRequest(kCFAllocatorDefault, httpRequest, (__bridge CFReadStreamRef)inputStream);
     } else {
         // If there is no body to send there is no need to make a streamed request.
         httpOperationReadStream = CFReadStreamCreateForHTTPRequest(kCFAllocatorDefault, httpRequest);
@@ -472,7 +460,7 @@ static void myReleaseCallback(void *info) {
         }
     }
         
-    [self setRequestHeaders:[(NSDictionary *)CFHTTPMessageCopyAllHeaderFields(httpRequest) autorelease]];
+    [self setRequestHeaders:(NSDictionary *)CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(httpRequest))];
     CFRelease(httpRequest);
     
     rateCalculator = [[S3TransferRateCalculator alloc] init];
@@ -498,11 +486,10 @@ static void myReleaseCallback(void *info) {
         [self setQueuePosition:[[self delegate] operationQueuePosition:self]];
         NSNumber *queuePositionNumber = [[NSNumber alloc] initWithInteger:[self queuePosition]];
         CFReadStreamSetProperty(httpOperationReadStream, S3PersistentCFReadStreamPoolUniquePeropertyKey, (CFNumberRef)queuePositionNumber);
-        [queuePositionNumber release];
     }
     
     // TODO: error checking on setting the stream client
-    CFStreamClientContext clientContext = {0, self, NULL, NULL, NULL};
+    CFStreamClientContext clientContext = {0, (__bridge void *)(self), NULL, NULL, NULL};
     CFReadStreamSetClient(httpOperationReadStream, S3OperationNetworkEvents, ReadStreamClientCallBack, &clientContext);
     
     // Schedule the stream
@@ -594,10 +581,9 @@ static void myReleaseCallback(void *info) {
         statusCode = CFHTTPMessageGetResponseStatusCode(headerMessage);
         [self setResponseStatusCode:@(statusCode)];
         
-        NSDictionary *headerDict = (NSDictionary *)CFHTTPMessageCopyAllHeaderFields(headerMessage);
+        NSDictionary *headerDict = (NSDictionary *)CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(headerMessage));
         if (headerDict != nil) {
             [self setResponseHeaders:headerDict];
-            [headerDict release];
             headerDict = nil;
         }
         CFRelease(headerMessage);
@@ -707,10 +693,9 @@ static void myReleaseCallback(void *info) {
     if (bodyContentsData != nil || bodyContentsFilePath != nil) {
         // It is most likely upload data
         long long previouslyTransfered = [rateCalculator totalTransfered];
-        NSNumber *totalTransferedNumber = (NSNumber *)CFReadStreamCopyProperty(httpOperationReadStream, kCFStreamPropertyHTTPRequestBytesWrittenCount);
+        NSNumber *totalTransferedNumber = (NSNumber *)CFBridgingRelease(CFReadStreamCopyProperty(httpOperationReadStream, kCFStreamPropertyHTTPRequestBytesWrittenCount));
         long long totalTransfered = [totalTransferedNumber longLongValue];
         [rateCalculator addBytesTransfered:(totalTransfered - previouslyTransfered)];
-        [totalTransferedNumber release];
         [self updateInformationalSubStatus];
     }    
 }
@@ -723,7 +708,7 @@ static void myReleaseCallback(void *info) {
     [dictionary setObject:@(status) forKey:S3_ERROR_HTTP_STATUS_KEY];
     
     NSArray *a;
-    NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:aData options:NSXMLDocumentTidyXML error:&error] autorelease];
+    NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:aData options:NSXMLDocumentTidyXML error:&aError];
     if (aError!=NULL)
         [dictionary setObject:aError forKey:NSUnderlyingErrorKey];
     
@@ -733,13 +718,13 @@ static void myReleaseCallback(void *info) {
         [dictionary setObject:[[a objectAtIndex:0] stringValue] forKey:S3_ERROR_CODE_KEY];
     }
         
-    a = [[d rootElement] nodesForXPath:@"//Message" error:&error];
+    a = [[d rootElement] nodesForXPath:@"//Message" error:&aError];
     if (error!=NULL)
         [dictionary setObject:error forKey:NSUnderlyingErrorKey];
     if ([a count]==1)
         [dictionary setObject:[[a objectAtIndex:0] stringValue] forKey:NSLocalizedRecoverySuggestionErrorKey];
     
-    a = [[d rootElement] nodesForXPath:@"//Resource" error:&error];
+    a = [[d rootElement] nodesForXPath:@"//Resource" error:&aError];
     if (error!=NULL)
         [dictionary setObject:error forKey:NSUnderlyingErrorKey];
     if ([a count]==1)

@@ -29,7 +29,6 @@ static NSString *S3OperationInfoDownloadObjectOperationFilePathKey = @"S3Operati
     
     self = [super initWithConnectionInfo:c operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         

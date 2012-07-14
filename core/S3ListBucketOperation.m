@@ -43,7 +43,7 @@
 - (S3Owner *)owner
 {
     NSError *_error;
-	NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error] autorelease];
+	NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error];
 	NSArray *owners = [[d rootElement] nodesForXPath:@"//Owner" error:&_error];
     if ([owners count] == 1) {
         NSXMLElement *element = [owners objectAtIndex:0];
@@ -64,7 +64,7 @@
         
         S3Owner *owner = nil;
         if (name != nil) {
-            owner = [[[S3Owner alloc] initWithID:ownerID displayName:name] autorelease];
+            owner = [[S3Owner alloc] initWithID:ownerID displayName:name];
         }
         
         return owner;        
@@ -77,7 +77,7 @@
 {
     NSError *_error;
 	NSXMLElement *element;
-	NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error] autorelease];
+	NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error];
     
 	NSEnumerator *e = [[[d rootElement] nodesForXPath:@"//Bucket" error:&_error] objectEnumerator];
     NSMutableArray *result = [NSMutableArray array];
@@ -87,7 +87,7 @@
         NSCalendarDate *date = [[element elementForName:@"CreationDate"] dateValue];
         S3Bucket *b = nil;
         if (name != nil) {
-            b = [[[S3Bucket alloc] initWithName:name creationDate:date] autorelease];        
+            b = [[S3Bucket alloc] initWithName:name creationDate:date];        
         }
         
         if (b != nil) {

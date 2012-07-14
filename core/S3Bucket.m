@@ -25,7 +25,6 @@
 
     if (self != nil) {
         if (name == nil) {
-            [self release];
             return nil;
         }        
         [self setName:name];
@@ -41,12 +40,6 @@
     return [self initWithName:name creationDate:nil];
 }
 
-- (void)dealloc
-{
-    [_creationDate release];
-    [_name release];
-    [super dealloc];
-}
 
 + (BOOL)isDNSComptatibleName:(NSString*)name;
 {
@@ -87,8 +80,7 @@
 
 - (void)setCreationDate:(NSDate *)aCreationDate
 {
-    [_creationDate release];
-    _creationDate = [aCreationDate retain];
+    _creationDate = aCreationDate;
 }
 
 - (NSString *)name
@@ -98,8 +90,7 @@
 
 - (void)setName:(NSString *)aName
 {
-    [_name release];
-    _name = [aName retain];
+    _name = aName;
 }
 
 - (NSUInteger)hash
@@ -118,7 +109,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    return [self retain];
+    return self;
 }
 
 @end

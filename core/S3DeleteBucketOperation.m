@@ -7,6 +7,7 @@
 //
 
 #import "S3DeleteBucketOperation.h"
+#import "S3Bucket.h"
 
 static NSString *S3OperationInfoDeleteBucketOperationBucketKey = @"S3OperationInfoDeleteBucketOperationBucketKey";
 
@@ -23,7 +24,6 @@ static NSString *S3OperationInfoDeleteBucketOperationBucketKey = @"S3OperationIn
     
     self = [super initWithConnectionInfo:theConnectionInfo operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         

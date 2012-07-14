@@ -58,7 +58,7 @@
     if ([S3ActiveWindowController instancesRespondToSelector:@selector(awakeFromNib)] == YES) {
         [super awakeFromNib];
     }
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"ObjectsToolbar"] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"ObjectsToolbar"];
     [toolbar setDelegate:self];
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:YES];
@@ -67,7 +67,7 @@
     [toolbar setDisplayMode:NSToolbarDisplayModeDefault];
     [[self window] setToolbar:toolbar];
 
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
@@ -159,7 +159,7 @@
         [item setAction:@selector(rename:)];
     }
     
-    return [item autorelease];
+    return item;
 }
 
 
@@ -210,7 +210,6 @@
         S3DeleteObjectOperation *deleteOp = [[S3DeleteObjectOperation alloc] initWithConnectionInfo:[op connectionInfo] object:sourceObject];
         [_renameOperations removeObject:op];
         [self addToCurrentOperations:deleteOp];
-        [deleteOp release];
     }
     
     if (([op isKindOfClass:[S3AddObjectOperation class]] || [op isKindOfClass:[S3DeleteObjectOperation class]]) && [op state] == S3OperationDone) {
@@ -265,10 +264,8 @@
     [alert addButtonWithTitle:NSLocalizedString(@"Remove",nil)];
     if ([alert runModal] == NSAlertFirstButtonReturn)
     {
-        [alert release];
         return;
     }
-    [alert release];
     
     S3Object *b;
     NSEnumerator *e = [[_objectsController arrangedObjects] objectEnumerator];
@@ -277,7 +274,6 @@
     {
         S3DeleteObjectOperation *op = [[S3DeleteObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] object:b];
         [self addToCurrentOperations:op];
-        [op release];
     }
 }
 
@@ -295,10 +291,8 @@
         [alert addButtonWithTitle:NSLocalizedString(@"Remove",nil)];
         if ([alert runModal] == NSAlertFirstButtonReturn)
         {
-            [alert release];
             return;
         }
-        [alert release];        
     }
     
     NSEnumerator *e = [[_objectsController selectedObjects] objectEnumerator];
@@ -306,7 +300,6 @@
     {
         S3DeleteObjectOperation *op = [[S3DeleteObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] object:b];
         [self addToCurrentOperations:op];
-        [op release];
     }
 }
 
@@ -325,7 +318,6 @@
         if (runResult == NSOKButton) {
             S3DownloadObjectOperation *op = [[S3DownloadObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] object:b saveTo:[sp filename]];
             [self addToCurrentOperations:op];
-            [op release];
         }
     }
 }
@@ -375,10 +367,8 @@
     S3Object *objectToAdd = [[S3Object alloc] initWithBucket:[self bucket] key:key userDefinedMetadata:nil metadata:metadataDict dataSourceInfo:dataSourceInfo];
         
     S3AddObjectOperation *op = [[S3AddObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] object:objectToAdd];
-    [objectToAdd release];
 
     [self addToCurrentOperations:op];
-    [op release];
 }
 
 - (void)uploadFiles
@@ -393,7 +383,7 @@
 
 - (IBAction)upload:(id)sender
 {
-    NSOpenPanel *oPanel = [[NSOpenPanel openPanel] retain];
+    NSOpenPanel *oPanel = [NSOpenPanel openPanel];
     [oPanel setAllowsMultipleSelection:YES];
     [oPanel setPrompt:NSLocalizedString(@"Upload",nil)];
     [oPanel setCanChooseDirectories:TRUE];
@@ -464,18 +454,15 @@
     NSArray *files = [panel filenames];
     
     if (returnCode != NSOKButton) {
-        [panel release];
         return;
     }
-    [panel release];
 
     [self importFiles:files withDialog:TRUE];
 }
 
 - (void)didEndRenameSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    S3Object *source = (S3Object *)contextInfo;
-    [source autorelease];
+    S3Object *source = (__bridge_transfer S3Object *)contextInfo;
 
     [sheet orderOut:self];
 
@@ -490,7 +477,6 @@
     S3Object *newObject = [[S3Object alloc] initWithBucket:[self bucket] key:[self renameName]];
         
     S3CopyObjectOperation *copyOp = [[S3CopyObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] from:source to:newObject];
-    [newObject release];
     
     [_renameOperations addObject:copyOp];
     
@@ -505,7 +491,12 @@
     }
     S3Object *selectedObject = [[_objectsController selectedObjects] objectAtIndex:0];
     [self setRenameName:[selectedObject key]];
-    [NSApp beginSheet:renameSheet modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(didEndRenameSheet:returnCode:contextInfo:) contextInfo:[selectedObject retain]];
+    
+    [NSApp beginSheet:renameSheet
+       modalForWindow:[self window]
+        modalDelegate:self
+       didEndSelector:@selector(didEndRenameSheet:returnCode:contextInfo:)
+          contextInfo:(__bridge_retained void*)selectedObject];
 }
 
 #pragma mark -
@@ -525,8 +516,7 @@
 
 - (void)setObjects:(NSMutableArray *)aObjects
 {
-    [_objects release];
-    _objects = [aObjects retain];
+    _objects = aObjects;
 }
 
 - (NSMutableDictionary *)objectsInfo
@@ -536,8 +526,7 @@
 
 - (void)setObjectsInfo:(NSMutableDictionary *)aObjectsInfo
 {
-    [_objectsInfo release];
-    _objectsInfo = [aObjectsInfo retain];
+    _objectsInfo = aObjectsInfo;
 }
 
 - (S3Bucket *)bucket
@@ -547,8 +536,7 @@
 
 - (void)setBucket:(S3Bucket *)aBucket
 {
-    [_bucket release];
-    _bucket = [aBucket retain];
+    _bucket = aBucket;
 }
 
 - (NSString *)renameName
@@ -558,8 +546,7 @@
 
 - (void)setRenameName:(NSString *)name
 {
-    [_renameName release];
-    _renameName = [name retain];
+    _renameName = name;
 }
 
 - (NSString *)uploadACL
@@ -569,8 +556,7 @@
 
 - (void)setUploadACL:(NSString *)anUploadACL
 {
-    [_uploadACL release];
-    _uploadACL = [anUploadACL retain];
+    _uploadACL = anUploadACL;
     [[NSUserDefaults standardUserDefaults] setObject:anUploadACL forKey:DEFAULT_PRIVACY];
 }
 
@@ -581,8 +567,7 @@
 
 - (void)setUploadFilename:(NSString *)anUploadFilename
 {
-    [_uploadFilename release];
-    _uploadFilename = [anUploadFilename retain];
+    _uploadFilename = anUploadFilename;
 }
 
 - (NSString *)uploadSize
@@ -592,19 +577,17 @@
 
 - (void)setUploadSize:(NSString *)anUploadSize
 {
-    [_uploadSize release];
-    _uploadSize = [anUploadSize retain];
+    _uploadSize = anUploadSize;
 }
 
 - (NSMutableArray *)uploadData
 {
-    return [[_uploadData retain] autorelease]; 
+    return _uploadData; 
 }
 
 - (void)setUploadData:(NSMutableArray *)data
 {
-    [_uploadData release];
-    _uploadData = [data retain];
+    _uploadData = data;
 }
 
 - (BOOL)validList
@@ -632,19 +615,6 @@
 -(void)dealloc
 {
     [[[NSApp delegate] queue] removeQueueListener:self];
-    
-    [_renameOperations release];
-    [_redirectConnectionInfoMappings release];
-    
-    [self setObjects:nil];
-    [self setObjectsInfo:nil];
-    [self setBucket:nil];
-
-    [self setUploadACL:nil];
-    [self setUploadFilename:nil];
-    [self setUploadData:nil];
-    
-    [super dealloc];
 }
 
 @end

@@ -64,7 +64,7 @@ extern NSString *S3ObjectMetadataStorageClassKey;
 // Initializes an S3Object with the bucket it is contained in and the key that identifies it in that bucket.
 - (id)initWithBucket:(S3Bucket *)bucket key:(NSString *)key;
 
-@property(readonly, retain) S3Bucket *bucket;
+@property(readonly, strong) S3Bucket *bucket;
 @property(readonly, copy) NSString *key;
 @property(readonly, copy) NSDictionary *dataSourceInfo;
 @property(readonly, copy) NSDictionary *metadata;

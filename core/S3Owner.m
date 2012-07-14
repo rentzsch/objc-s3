@@ -33,12 +33,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[_id release];
-	[_displayName release];
-	[super dealloc];
-}
 
 - (NSString *)ID
 {
@@ -48,7 +42,6 @@
 - (void)setID:(NSString *)anId
 {
     NSString *newId = [anId copy];
-    [_id release];
     _id = newId;
 }
 

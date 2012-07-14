@@ -20,10 +20,9 @@
 // be encoded as the class will handle that detail for you.
 
 @interface S3HTTPURLBuilder : NSObject {
-    id delegate;
 }
 
-@property(nonatomic, assign, readwrite) id delegate;
+@property(nonatomic, weak) id delegate;
 
 - (id)initWithDelegate:(id)delegate;
 - (NSURL *)url;

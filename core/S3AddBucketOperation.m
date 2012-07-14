@@ -32,11 +32,9 @@ static NSString *S3LocationFormatString = @"<CreateBucketConfiguration><Location
 
     self = [super initWithConnectionInfo:ci operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
 
     if (self != nil) {
         if (!([r availableServices] & AWSSimpleStorageService)) {
-            [self release];
             return nil;
         }        
     }

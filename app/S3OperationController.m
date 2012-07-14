@@ -22,12 +22,12 @@
 
 + (void)initialize
 {
-	[NSValueTransformer setValueTransformer:[[S3OperationSummarizer new] autorelease] forName:@"S3OperationSummarizer"];
+	[NSValueTransformer setValueTransformer:[S3OperationSummarizer new] forName:@"S3OperationSummarizer"];
 }
 
 -(void)awakeFromNib
 {
-	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"OperationConsoleToolbar"] autorelease];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"OperationConsoleToolbar"];
 	[toolbar setDelegate:self];
 	[toolbar setVisible:YES];
 	[toolbar setAllowsUserCustomization:YES];
@@ -136,6 +136,6 @@
 		[item setAction:@selector(info:)];
     }
 	
-    return [item autorelease];
+    return item;
 }
 @end

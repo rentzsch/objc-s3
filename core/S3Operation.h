@@ -43,8 +43,6 @@ typedef enum _S3OperationState {
 @end
 
 @interface S3Operation : NSObject {
-    NSObject <S3OperationDelegate> *delegate;
-
     NSDictionary *operationInfo;
     
     S3ConnectionInfo *connectionInfo;
@@ -68,14 +66,12 @@ typedef enum _S3OperationState {
     S3TransferRateCalculator *rateCalculator;
     
     NSInteger queuePosition;
-    
-    NSError *error;
 }
 
 - (id)initWithConnectionInfo:(S3ConnectionInfo *)aConnectionInfo operationInfo:(NSDictionary *)anOperationInfo;
 - (id)initWithConnectionInfo:(S3ConnectionInfo *)aConnectionInfo;
 
-@property(readwrite, nonatomic, assign) id delegate;
+@property(readwrite, nonatomic, weak) id delegate;
 
 // Connection information used by the operation.
 @property(readonly, nonatomic, copy) S3ConnectionInfo *connectionInfo;

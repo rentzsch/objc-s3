@@ -30,7 +30,6 @@ static NSString *S3OperationInfoCopyObjectOperationDestinationObjectKey = @"S3Op
     
     self = [super initWithConnectionInfo:c operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         
@@ -75,7 +74,7 @@ static NSString *S3OperationInfoCopyObjectOperationDestinationObjectKey = @"S3Op
     }
     
     NSString *copySource = [NSString stringWithFormat:@"/%@/%@", [[sourceObject bucket] name], [sourceObject key]];
-    NSString *copySourceURLEncoded = [(NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)copySource, NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8) autorelease];
+    NSString *copySourceURLEncoded = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)copySource, NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8));
     [additionalMetadata setObject:copySourceURLEncoded forKey:@"x-amz-copy-source"];
     
     return additionalMetadata;
@@ -104,7 +103,7 @@ static NSString *S3OperationInfoCopyObjectOperationDestinationObjectKey = @"S3Op
 {
     if ([[self responseStatusCode] isEqual:@200]) {
         NSError *aError = nil;
-        NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLDocumentTidyXML error:&aError] autorelease];
+        NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLDocumentTidyXML error:&aError];
         NSXMLElement *e = [d rootElement];
         if ([[e localName] isEqualToString:@"Error"]) {
             *theState = S3OperationError;

@@ -66,7 +66,7 @@
 
 - (id)init
 {
-	[super init];
+	if (!(self = [super init])) return nil;
 	_displayAverageRate = YES;
 	_externalUnit = S3KibibyteUnit;
 	_externalRate = S3PerSecondRate;
@@ -79,9 +79,6 @@
 - (void)dealloc
 {
 	[self stopTransferRateCalculator];
-	[_startTime release];
-	[_lastUpdateTime release];
-	[super dealloc];
 }
 
 - (id)delegate
@@ -251,7 +248,6 @@
         _totalTransfered = 0;
     }
 	_calculateTimer = [NSTimer scheduledTimerWithTimeInterval:_calculationRate target:self selector:@selector(updateRateVariables:) userInfo:nil repeats:YES];
-	[_calculateTimer retain];
 	if (_startTime == nil) {
 		_startTime = [[NSDate alloc] init];		
 	}
@@ -260,9 +256,7 @@
 - (void)stopTransferRateCalculator
 {
 	[_calculateTimer invalidate];
-	[_calculateTimer release];
 	_calculateTimer = nil;
-	[_startTime release];
 	_startTime = nil;
 }
 
@@ -284,12 +278,10 @@
     if ([self delegate] != nil && [[self delegate] respondsToSelector:@selector(pingFromTransferRateCalculator:)]) {
         [[self delegate] pingFromTransferRateCalculator:self];
     }
-	[_calculatedTransferRate release];
 	_calculatedTransferRate = nil;
 	if (_displayAverageRate == NO && _pendingIncrease > 0) {
 		_calculatedTransferRate = [[NSString alloc] initWithFormat:@"%.2f", ((float)(_pendingIncrease) / [self valueForS3UnitType:_externalUnit]) / (([[NSDate date] timeIntervalSinceDate:_lastUpdateTime] * 1000.0) / [self valueForS3RateType:_externalRate])];
 	}
-	[_timeRemaining release];
 	_timeRemaining = nil;
 	if (_objective > 0 && _totalTransfered > 0) {
 		// 
@@ -341,7 +333,6 @@
 	
 	_totalTransfered += _pendingIncrease;
 	_pendingIncrease = 0;
-	[_lastUpdateTime autorelease];
 	_lastUpdateTime = [[NSDate alloc] init];
 
 	if (_displayAverageRate == YES && _totalTransfered > 0) {

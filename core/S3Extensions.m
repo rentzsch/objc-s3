@@ -209,7 +209,7 @@
 	char *base64Pointer;
     long base64Length = BIO_get_mem_data(mem, &base64Pointer);
 		
-	NSString *base64String = [[[NSString alloc] initWithBytes:base64Pointer length:base64Length encoding:NSASCIIStringEncoding] autorelease];
+	NSString *base64String = [[NSString alloc] initWithBytes:base64Pointer length:base64Length encoding:NSASCIIStringEncoding];
 		
 	BIO_free_all(mem);
     return base64String;
@@ -279,7 +279,7 @@
 	if(err != noErr)
 		return nil;
 	CFStringRef mimeType = UTTypeCopyPreferredTagWithClass(utiType, kUTTagClassMIMEType);
-	return [(NSString*)mimeType autorelease];
+	return (__bridge NSString*)mimeType;
 }
 
 + (NSString *)readableSizeForPaths:(NSArray *)files
@@ -382,9 +382,8 @@
 	// Escape all Reserved characters from rfc 2396 section 2.2
 	// except "/" since that's used explicitly in format strings.
 	CFStringRef escapeChars = (CFStringRef)@";?:@&=+$,";
-	return [(NSString*)CFURLCreateStringByAddingPercentEscapes(NULL,
-			(CFStringRef)self, NULL, escapeChars, kCFStringEncodingUTF8)
-			autorelease];
+	return (NSString*)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
+			(CFStringRef)self, NULL, escapeChars, kCFStringEncodingUTF8));
 }
 
 @end

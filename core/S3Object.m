@@ -28,7 +28,7 @@ NSString *S3ObjectMetadataStorageClassKey = @"storageclass";
 
 @interface S3Object ()
 
-@property(readwrite, retain) S3Bucket *bucket;
+@property(readwrite, strong) S3Bucket *bucket;
 @property(readwrite, copy) NSString *key;
 @property(readwrite, copy) NSDictionary *userDefinedMetadata;
 @property(readwrite, copy) NSDictionary *metadata;
@@ -82,18 +82,10 @@ NSString *S3ObjectMetadataStorageClassKey = @"storageclass";
     return [self initWithBucket:bucket key:key userDefinedMetadata:nil];
 }
 
-- (void)dealloc
-{
-	[_bucket release];
-    [_key release];
-	[_dataSourceInfo release];
-	[_metadata release];
-	[super dealloc];
-}
 
 - (NSDictionary *)userDefinedMetadata
 {
-    NSMutableDictionary *mutableDictionary = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] init];
     NSString *metadataKey = nil;
     NSEnumerator *metadataKeyEnumerator = [[self metadata] keyEnumerator];
     NSRange notFoundRange = NSMakeRange(NSNotFound, 0);
@@ -105,7 +97,7 @@ NSString *S3ObjectMetadataStorageClassKey = @"storageclass";
             [mutableDictionary setObject:object forKey:userDefinatedMetadataKey];
         }
     }
-    return [[mutableDictionary copy] autorelease];
+    return [mutableDictionary copy];
 }
 
 - (void)setUserDefinedMetadata:(NSDictionary *)md
@@ -181,7 +173,7 @@ NSString *S3ObjectMetadataStorageClassKey = @"storageclass";
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    return [self retain];
+    return self;
 }
 
 @end

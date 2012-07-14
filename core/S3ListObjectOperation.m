@@ -29,7 +29,6 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
     
     self = [super initWithConnectionInfo:theConnectionInfo operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         
@@ -88,7 +87,7 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
 {
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     NSError *_error;
-	NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error] autorelease];
+	NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error];
 	NSXMLElement *root = [d rootElement];
 	
 	[dictionary safeSetObject:[[root elementForName:@"Name"] stringValue] forKey:@"Name"];
@@ -104,7 +103,7 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
 - (NSArray *)objects
 {
     NSError *_error;
-	NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error] autorelease];
+	NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLNodeOptionsNone error:&_error];
 	NSXMLElement *root = [d rootElement];
 	NSXMLElement *n;
     
@@ -143,7 +142,7 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
         
         S3Owner *resultOwner = nil;
         if (name != nil) {
-            resultOwner = [[[S3Owner alloc] initWithID:ownerID displayName:name] autorelease];            
+            resultOwner = [[S3Owner alloc] initWithID:ownerID displayName:name];            
         }
         
         if (resultOwner != nil) {
@@ -163,7 +162,6 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
         if (newObject != nil) {
             [result addObject:newObject];
         }
-        [newObject release];
     }
     
     return result;    
@@ -186,7 +184,7 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
         return nil;
     
     S3Bucket *bucket = [self bucket];
-    S3ListObjectOperation *op = [[[S3ListObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] bucket:bucket marker:nm] autorelease];
+    S3ListObjectOperation *op = [[S3ListObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] bucket:bucket marker:nm];
     
     return op;
 }

@@ -44,7 +44,6 @@ NSString *S3HeaderPrefixString = @"x-amz";
     self = [super init];
     if (self != nil) {
         if (delegate == nil) {
-            [self release];
             return nil;
         }        
         [self setDelegate:delegate];
@@ -85,14 +84,6 @@ NSString *S3HeaderPrefixString = @"x-amz";
 - (id)init
 {
     return [self initWithDelegate:nil];
-}
-
-- (void)dealloc
-{
-    [self setUserInfo:nil];
-    [self setHostEndpoint:nil];
-    
-	[super dealloc];
 }
 
 // A delegate is required
@@ -144,7 +135,6 @@ NSString *S3HeaderPrefixString = @"x-amz";
 - (void)setHostEndpoint:(NSString *)host
 {
     host = [host copy];
-    [_host release];
     _host = host;
 }
 
@@ -165,8 +155,6 @@ NSString *S3HeaderPrefixString = @"x-amz";
 
 - (void)setUserInfo:(NSDictionary *)userInfo
 {
-    [userInfo retain];
-    [_userInfo release];
     _userInfo = userInfo;
 }
 
@@ -225,7 +213,7 @@ NSString *S3HeaderPrefixString = @"x-amz";
     // Work out the Canonicalized Resource
     NSURL *requestURL = [operation url];
     NSString *requestQuery = [requestURL query];
-    NSString *requestPath = [(NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)[requestURL path], NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8) autorelease];
+    NSString *requestPath = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)[requestURL path], NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8));
     NSString *absoluteString = [requestURL absoluteString];
     if (requestQuery != nil) {
         NSString *withoutQuery = [absoluteString stringByReplacingOccurrencesOfString:requestQuery withString:@""];
@@ -278,37 +266,37 @@ NSString *S3HeaderPrefixString = @"x-amz";
         return NULL;
     }
     
-    httpRequest = CFHTTPMessageCreateRequest(kCFAllocatorDefault, (CFStringRef)[operation requestHTTPVerb], (CFURLRef)requestURL, kCFHTTPVersion1_1);
+    httpRequest = CFHTTPMessageCreateRequest(kCFAllocatorDefault, (__bridge CFStringRef)[operation requestHTTPVerb], (__bridge CFURLRef)requestURL, kCFHTTPVersion1_1);
     e = [[[operation additionalHTTPRequestHeaders] allKeys] objectEnumerator];
     key = nil;
 	while (key = [e nextObject])
 	{
 		id object = [[operation additionalHTTPRequestHeaders] objectForKey:key];
-        CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)key, (CFStringRef)[NSString stringWithFormat:@"%@", object]);
+        CFHTTPMessageSetHeaderFieldValue(httpRequest, (__bridge CFStringRef)key, (__bridge CFStringRef)[NSString stringWithFormat:@"%@", object]);
 	}
     
     if ([[operation additionalHTTPRequestHeaders] objectForKey:S3ObjectMetadataContentLengthKey] == nil) {
         NSNumber *contentLength = [NSNumber numberWithLongLong:[operation requestBodyContentLength]];
-        CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)S3ObjectMetadataContentLengthKey, (CFStringRef)[contentLength stringValue]);
+        CFHTTPMessageSetHeaderFieldValue(httpRequest, (__bridge CFStringRef)S3ObjectMetadataContentLengthKey, (__bridge CFStringRef)[contentLength stringValue]);
     }
     
     if ([[operation additionalHTTPRequestHeaders] objectForKey:S3ObjectMetadataContentTypeKey] == nil) {
         if (contentType != nil) {
-            CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)S3ObjectMetadataContentTypeKey, (CFStringRef)contentType);
+            CFHTTPMessageSetHeaderFieldValue(httpRequest, (__bridge CFStringRef)S3ObjectMetadataContentTypeKey, (__bridge CFStringRef)contentType);
         }
     }
     
     if ([[operation additionalHTTPRequestHeaders] objectForKey:S3ObjectMetadataContentMD5Key] == nil) {
         if (md5 != nil) {
-            CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)S3ObjectMetadataContentMD5Key, (CFStringRef)md5);
+            CFHTTPMessageSetHeaderFieldValue(httpRequest, (__bridge CFStringRef)S3ObjectMetadataContentMD5Key, (__bridge CFStringRef)md5);
         }
     }
     
     // Add the "Expect: 100-continue" header
     CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)@"Expect", (CFStringRef)@"100-continue");
     
-    CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)@"Date", (CFStringRef)[[operation date] descriptionWithCalendarFormat:@"%a, %d %b %Y %H:%M:%S %z"]);
-    CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)@"Authorization", (CFStringRef)authorization);
+    CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)@"Date", (__bridge CFStringRef)[[operation date] descriptionWithCalendarFormat:@"%a, %d %b %Y %H:%M:%S %z"]);
+    CFHTTPMessageSetHeaderFieldValue(httpRequest, (CFStringRef)@"Authorization", (__bridge CFStringRef)authorization);
 
     
     return httpRequest;

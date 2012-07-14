@@ -42,7 +42,7 @@
     if ([operation state] == S3OperationRequiresRedirect) {        
         NSData *operationResponseData = [operation responseData];
         NSError *error = nil;
-        NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:operationResponseData options:NSXMLDocumentTidyXML error:&error] autorelease];
+        NSXMLDocument *d = [[NSXMLDocument alloc] initWithData:operationResponseData options:NSXMLDocumentTidyXML error:&error];
         if (error) {
             return;
         }
@@ -78,11 +78,8 @@
             [_redirectConnectionInfoMappings setObject:operationConnectionInfo forKey:redirectConnectionInfo];
             
             S3Operation *replacementOperation = [[[operation class] alloc] initWithConnectionInfo:redirectConnectionInfo operationInfo:operationInfo];
-            [redirectConnectionInfo release];
-            [operationInfo release];
             
             [self addToCurrentOperations:replacementOperation];
-            [replacementOperation release];
         }        
     }
     
@@ -121,8 +118,6 @@
 
 - (void)setConnectionInfo:(S3ConnectionInfo *)aConnectionInfo
 {
-    [aConnectionInfo retain];
-    [_connectionInfo release];
     _connectionInfo = aConnectionInfo;
 }
 
@@ -149,15 +144,5 @@
     return nil;
 }
 
-#pragma mark -
-#pragma mark Dealloc
-
-- (void)dealloc
-{
-	[self setConnectionInfo:nil];
-    [_operations release];
-    [_redirectConnectionInfoMappings release];
-	[super dealloc];
-}
 
 @end

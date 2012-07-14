@@ -42,7 +42,7 @@ enum {
     if ([S3ActiveWindowController instancesRespondToSelector:@selector(awakeFromNib)] == YES) {
         [super awakeFromNib];
     }
-    NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"BucketsToolbar"] autorelease];
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"BucketsToolbar"];
     [toolbar setDelegate:self];
     [toolbar setVisible:YES];
     [toolbar setAllowsUserCustomization:YES];
@@ -51,7 +51,7 @@ enum {
     [toolbar setDisplayMode:NSToolbarDisplayModeDefault];
     [[self window] setToolbar:toolbar];
 
-    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
     [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
@@ -111,7 +111,7 @@ enum {
         [item setAction:@selector(refresh:)];
     }
     
-    return [item autorelease];
+    return item;
 }
 
 #pragma mark -
@@ -164,10 +164,8 @@ enum {
     [alert addButtonWithTitle:NSLocalizedString(@"Remove",nil)];
     if ([alert runModal] == NSAlertFirstButtonReturn)
     {   
-        [alert release];
         return;
     }
-    [alert release];
 
     S3Bucket *b;
     NSEnumerator *e = [[_bucketsController selectedObjects] objectEnumerator];
@@ -190,7 +188,7 @@ enum {
 {
     [sheet orderOut:self];
     if (returnCode==SHEET_OK) {
-        S3Bucket *newBucket = [[[S3Bucket alloc] initWithName:_name] autorelease];
+        S3Bucket *newBucket = [[S3Bucket alloc] initWithName:_name];
         if (newBucket == nil) {
             return;
         }
@@ -227,7 +225,7 @@ enum {
         if ((c = [_bucketListControllerCache objectForKey:b])) {
             [c showWindow:self];
         } else {
-            c = [[[S3ObjectListController alloc] initWithWindowNibName:@"Objects"] autorelease];
+            c = [[S3ObjectListController alloc] initWithWindowNibName:@"Objects"];
             [c setBucket:b];
 
             [c setConnectionInfo:[self connectionInfo]];
@@ -257,8 +255,7 @@ enum {
 
 - (void)setName:(NSString *)aName
 {
-    [_name release];
-    _name = [aName retain];
+    _name = aName;
 }
 
 - (BOOL)isValidName
@@ -282,8 +279,7 @@ enum {
 
 - (void)setBucketsOwner:(S3Owner *)anBucketsOwner
 {
-    [_bucketsOwner release];
-    _bucketsOwner = [anBucketsOwner retain];
+    _bucketsOwner = anBucketsOwner;
 }
 
 - (NSArray *)buckets
@@ -293,8 +289,6 @@ enum {
 
 - (void)setBuckets:(NSArray *)aBuckets
 {
-    [aBuckets retain];
-    [_buckets release];
     _buckets = aBuckets;
 }
 
@@ -304,14 +298,6 @@ enum {
 -(void)dealloc
 {
     [[[NSApp delegate] queue] removeQueueListener:self];
-
-    [_bucketListControllerCache release];
-    
-    [self setName:nil];
-    [self setBucketsOwner:nil];
-    [self setBuckets:nil];
-    
-    [super dealloc];
 }
 
 @end

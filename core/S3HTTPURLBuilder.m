@@ -19,7 +19,6 @@
 
     if (self != nil) {
         if (theDelegate == nil) {
-            [self release];
             return nil;
         }
         [self setDelegate:theDelegate];
@@ -34,8 +33,8 @@
 }
 
 - (NSString *)escapedQueryComponentStringWithString:(NSString *)query {
-    NSString *escaped = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)query, NULL, (CFStringRef)@"[]#%?/,$+=&@:;()'*!", kCFStringEncodingUTF8);
-    return [escaped autorelease];
+    NSString *escaped = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)query, NULL, (CFStringRef)@"[]#%?/,$+=&@:;()'*!", kCFStringEncodingUTF8));
+    return escaped;
 }
 
 - (NSString *)encodeQueryStringFromQueryItems:(NSDictionary *)queryItems {
@@ -84,8 +83,7 @@
         
     NSString *encodedPath = @"";
     if ([key length] > 0) {
-        encodedPath = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)key, NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8);        
-        [encodedPath autorelease];
+        encodedPath = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)key, NULL, (CFStringRef)@"[]#%?,$+=&@:;()'*!", kCFStringEncodingUTF8));
     }
 
     NSDictionary *queryItems = nil;

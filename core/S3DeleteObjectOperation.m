@@ -25,7 +25,6 @@ static NSString *S3OperationInfoDeleteObjectOperationObjectKey = @"S3OperationIn
     
     self = [super initWithConnectionInfo:c operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         

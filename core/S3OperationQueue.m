@@ -49,10 +49,7 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 
 - (void)dealloc
 {
-	[_currentOperations release];
-    [_activeOperations release];
 	[self disarmTimer];
-	[super dealloc];
 }
 
 #pragma mark -
@@ -88,7 +85,6 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 {
     if ([o state] >= S3OperationCanceled) {
         // Retain object while it's in flux must be released at end!
-        [o retain];
         [self removeFromCurrentOperations:o];
         
         if ([o state] == S3OperationError) {
@@ -113,7 +109,6 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
     
     if ([o state] >= S3OperationCanceled) {
         // Object is out of flux
-        [o release];
     }
 }
 
@@ -154,14 +149,13 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 -(void)rearmTimer
 {
 	if (_timer==NULL) {
-		_timer = [[NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(startQualifiedOperations:) userInfo:nil repeats:YES] retain];
+		_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(startQualifiedOperations:) userInfo:nil repeats:YES];
     }
 }
 
 -(void)disarmTimer
 {
 	[_timer invalidate];
-	[_timer release];
 	_timer = NULL;	
 }
 

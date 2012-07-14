@@ -59,7 +59,7 @@ NSString *AWSRegionEUIrelandValue = @"EU";
             if (![theRegionKey isEqualToString:AWSRegionUSEastKey]) {
                 [region setAvailableServices:AWSSimpleStorageService];                
             }
-            return [region autorelease];
+            return region;
         }
     }
     return nil;
@@ -71,7 +71,7 @@ NSString *AWSRegionEUIrelandValue = @"EU";
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    return [self retain];
+    return self;
 }
 
 @end

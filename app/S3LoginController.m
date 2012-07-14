@@ -22,6 +22,8 @@
 - (BOOL)setS3SecretKeyToKeychainForS3AccessKey:(NSString *)accesskey password:(NSString *)secretkey;
 - (void)checkPasswordInKeychain;
 
+@property (nonatomic) S3BucketListController* bucketListController;
+
 @end
 
 @implementation S3LoginController
@@ -32,7 +34,6 @@
 - (void)dealloc
 {
     [[[NSApp delegate] queue] removeQueueListener:self];
-    [super dealloc];
 }
 
 #pragma mark -
@@ -88,14 +89,13 @@
             [self setS3SecretKeyToKeychainForS3AccessKey:accessKeyID password:secretAccessKeyID];
         }
         
-        S3BucketListController *c = [[[S3BucketListController alloc] initWithWindowNibName:@"Buckets"] autorelease];
+        self.bucketListController = [[S3BucketListController alloc] initWithWindowNibName:@"Buckets"];
         
-        [c setConnectionInfo:[self connectionInfo]];
+        [self.bucketListController setConnectionInfo:[self connectionInfo]];
         
-        [c showWindow:self];
-        [c retain];			
-        [c setBuckets:[(S3ListBucketOperation *)operation bucketList]];
-        [c setBucketsOwner:[(S3ListBucketOperation*)operation owner]];
+        [self.bucketListController showWindow:self];
+        [self.bucketListController setBuckets:[(S3ListBucketOperation *)operation bucketList]];
+        [self.bucketListController setBucketsOwner:[(S3ListBucketOperation*)operation owner]];
 
         [self close];
     }
@@ -109,8 +109,7 @@
     if (accessKeyID == nil && secretAccessKeyID == nil) {
         return;
     }
-    [accessKeyID release];
-    accessKeyID = [[[NSUserDefaults standardUserDefaults] stringForKey:DEFAULT_USER] retain];
+    accessKeyID = [[NSUserDefaults standardUserDefaults] stringForKey:DEFAULT_USER];
     
     NSDictionary *authDict = @{@"accessKey": accessKeyID, @"secretAccessKey": secretAccessKeyID}; 
     
@@ -148,7 +147,7 @@
                                              &secretLength, &secretData,
                                              nil);
     if (status==noErr) {
-        secret = [[[NSString alloc] initWithBytes:secretData length:secretLength encoding:NSUTF8StringEncoding] autorelease];        
+        secret = [[NSString alloc] initWithBytes:secretData length:secretLength encoding:NSUTF8StringEncoding];        
     }
     
     SecKeychainItemFreeContent(NULL,secretData);	

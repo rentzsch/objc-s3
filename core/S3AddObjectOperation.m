@@ -26,7 +26,6 @@ static NSString *S3OperationInfoAddObjectOperationObjectKey = @"S3OperationInfoA
     
     self = [super initWithConnectionInfo:c operationInfo:theOperationInfo];
     
-    [theOperationInfo release];
     
     if (self != nil) {
         
