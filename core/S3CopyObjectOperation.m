@@ -102,7 +102,7 @@ static NSString *S3OperationInfoCopyObjectOperationDestinationObjectKey = @"S3Op
 
 - (BOOL)didInterpretStateForStreamHavingEndEncountered:(S3OperationState *)theState
 {
-    if ([[self responseStatusCode] isEqual:[NSNumber numberWithInt:200]]) {
+    if ([[self responseStatusCode] isEqual:@200]) {
         NSError *aError = nil;
         NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:[self responseData] options:NSXMLDocumentTidyXML error:&aError] autorelease];
         NSXMLElement *e = [d rootElement];

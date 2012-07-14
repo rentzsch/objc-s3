@@ -41,7 +41,7 @@
 
 + (void)initialize
 {
-    [self setKeys:[NSArray arrayWithObjects:@"validList", nil] triggerChangeNotificationsForDependentKey:@"validListString"];
+    [self setKeys:@[@"validList"] triggerChangeNotificationsForDependentKey:@"validListString"];
 }
 
 - (void)awakeFromNib
@@ -74,10 +74,10 @@
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
-    return [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
+    return @[NSToolbarSeparatorItemIdentifier,
         NSToolbarSpaceItemIdentifier,
         NSToolbarFlexibleSpaceItemIdentifier,
-        @"Refresh", @"Upload", @"Download", @"Remove", @"Remove All", @"Rename", nil];
+        @"Refresh", @"Upload", @"Download", @"Remove", @"Remove All", @"Rename"];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
@@ -96,7 +96,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-    return [NSArray arrayWithObjects: @"Upload", @"Download", @"Rename", @"Remove", NSToolbarSeparatorItemIdentifier,  @"Remove All", NSToolbarFlexibleSpaceItemIdentifier, @"Refresh", nil]; 
+    return @[@"Upload", @"Download", @"Rename", @"Remove", NSToolbarSeparatorItemIdentifier,  @"Remove All", NSToolbarFlexibleSpaceItemIdentifier, @"Refresh"]; 
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL) flag
@@ -331,7 +331,7 @@
     
     if (![self acceptFileForImport:path])
     {   
-        NSDictionary* d = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:NSLocalizedString(@"The file '%@' could not be read",nil),path],NSLocalizedDescriptionKey,nil];
+        NSDictionary* d = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedString(@"The file '%@' could not be read",nil),path]};
         [[self window] presentError:[NSError errorWithDomain:S3_ERROR_DOMAIN code:-2 userInfo:d] modalForWindow:[self window] delegate:self 
                  didPresentSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
         return;        
@@ -341,10 +341,10 @@
     NSString *md5 = nil;
     if ([size longLongValue] < (1024 * 16)) {
         NSData *bodyData = [NSData dataWithContentsOfFile:path];
-        dataSourceInfo = [NSDictionary dictionaryWithObject:bodyData forKey:S3ObjectNSDataSourceKey];        
+        dataSourceInfo = @{S3ObjectNSDataSourceKey: bodyData};        
         md5 = [[bodyData md5Digest] encodeBase64];
     } else {
-        dataSourceInfo = [NSDictionary dictionaryWithObject:path forKey:S3ObjectFilePathDataSourceKey];        
+        dataSourceInfo = @{S3ObjectFilePathDataSourceKey: path};        
         NSError *error = nil;
         NSData *bodyData = [NSData dataWithContentsOfFile:path options:(NSMappedRead|NSUncachedRead) error:&error];
         md5 = [[bodyData md5Digest] encodeBase64];

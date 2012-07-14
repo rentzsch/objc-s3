@@ -79,7 +79,7 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
 {
     NSString *marker = [self marker];
     if (marker != nil) {
-        return [NSDictionary dictionaryWithObjectsAndKeys:marker, @"marker", nil];
+        return @{@"marker": marker};
     }
     return nil;
 }

@@ -31,12 +31,12 @@
 
     // Not setting a default value for this default, it should be nil if it doesn't exist.
     [userDefaultsValuesDict setObject:@"" forKey:@"defaultAccessKey"];
-    [userDefaultsValuesDict setObject:[NSNumber numberWithBool:YES] forKey:@"autoclean"];
-    [userDefaultsValuesDict setObject:[NSNumber numberWithBool:YES] forKey:@"consolevisible"];
+    [userDefaultsValuesDict setObject:@YES forKey:@"autoclean"];
+    [userDefaultsValuesDict setObject:@YES forKey:@"consolevisible"];
     [userDefaultsValuesDict setObject:@"private" forKey:@"defaultUploadPrivacy"];
-    [userDefaultsValuesDict setObject:[NSNumber numberWithBool:NO] forKey:@"useKeychain"];
-    [userDefaultsValuesDict setObject:[NSNumber numberWithBool:YES] forKey:@"useSSL"];
-    [userDefaultsValuesDict setObject:[NSNumber numberWithBool:NO] forKey:@"autologin"];
+    [userDefaultsValuesDict setObject:@NO forKey:@"useKeychain"];
+    [userDefaultsValuesDict setObject:@YES forKey:@"useSSL"];
+    [userDefaultsValuesDict setObject:@NO forKey:@"autologin"];
     [[NSUserDefaults standardUserDefaults] registerDefaults:userDefaultsValuesDict];
 
     // Conversion code for new default

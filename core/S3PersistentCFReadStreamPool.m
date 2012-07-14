@@ -86,7 +86,7 @@ static NSString *S3DateKey = @"S3DateKey";
         return NO;
     }
 
-    NSNumber *positionNumber = [NSNumber numberWithUnsignedInteger:position];
+    NSNumber *positionNumber = @(position);
     NSDictionary *foundDictionary = [_activePersistentReadStreams objectForKey:positionNumber];
     CFReadStreamRef foundReadStream = (CFReadStreamRef)[foundDictionary objectForKey:S3PersistentReadStreamKey];
     if (foundReadStream != nil) {
@@ -102,7 +102,7 @@ static NSString *S3DateKey = @"S3DateKey";
         } else {
             while ((streamStatus == kCFStreamStatusOpening || streamStatus == kCFStreamStatusOpen || 
                     streamStatus == kCFStreamStatusReading || streamStatus == kCFStreamStatusWriting) && ((++position) < NSUIntegerMax)) {
-                positionNumber = [NSNumber numberWithUnsignedInteger:position];
+                positionNumber = @(position);
                 foundDictionary = [_activePersistentReadStreams objectForKey:positionNumber];
                 foundReadStream = (CFReadStreamRef)[foundDictionary objectForKey:S3PersistentReadStreamKey];
                 if (foundReadStream != nil) {

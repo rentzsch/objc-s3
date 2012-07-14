@@ -59,10 +59,10 @@ enum {
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
+    return @[NSToolbarSeparatorItemIdentifier,
         NSToolbarSpaceItemIdentifier,
         NSToolbarFlexibleSpaceItemIdentifier,
-        @"Refresh", @"Remove", @"Add", nil];
+        @"Refresh", @"Remove", @"Add"];
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
@@ -74,7 +74,7 @@ enum {
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-    return [NSArray arrayWithObjects: @"Add", @"Remove", NSToolbarFlexibleSpaceItemIdentifier, @"Refresh", nil]; 
+    return @[@"Add", @"Remove", NSToolbarFlexibleSpaceItemIdentifier, @"Refresh"]; 
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
@@ -237,7 +237,7 @@ enum {
 #pragma mark Key-value coding
 
 + (void)initialize {
-    [self setKeys:[NSArray arrayWithObjects:@"name",nil] triggerChangeNotificationsForDependentKey:@"isValidName"];
+    [self setKeys:@[@"name"] triggerChangeNotificationsForDependentKey:@"isValidName"];
 }
 
 - (NSString *)name

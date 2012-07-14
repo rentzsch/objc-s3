@@ -36,11 +36,10 @@ NSString *AWSRegionEUIrelandValue = @"EU";
 
 + (NSDictionary *)availableAWSRegionKeysAndValues
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:AWSRegionUSStandardValue, AWSRegionUSStandardKey,
-                                                      AWSRegionUSWestValue, AWSRegionUSWestKey,
-                                                      AWSRegionUSEastValue, AWSRegionUSEastKey,
-                                                      AWSRegionEUIrelandValue, AWSRegionEUIrelandKey,
-                                                      nil];
+    return @{AWSRegionUSStandardKey: AWSRegionUSStandardValue,
+                                                      AWSRegionUSWestKey: AWSRegionUSWestValue,
+                                                      AWSRegionUSEastKey: AWSRegionUSEastValue,
+                                                      AWSRegionEUIrelandKey: AWSRegionEUIrelandValue};
 }
 
 + (NSArray *)availableAWSRegionKeys

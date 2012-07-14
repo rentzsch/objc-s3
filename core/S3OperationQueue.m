@@ -108,7 +108,7 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
         }
     }
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:o, S3OperationObjectKey, nil];
+    NSDictionary *dict = @{S3OperationObjectKey: o};
     [[NSNotificationCenter defaultCenter] postNotificationName:S3OperationQueueOperationStateDidChangeNotification object:self userInfo:dict];
     
     if ([o state] >= S3OperationCanceled) {
@@ -119,13 +119,13 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 
 - (void)operationInformationalStatusDidChange:(S3Operation *)o
 {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:o, S3OperationObjectKey, nil];
+    NSDictionary *dict = @{S3OperationObjectKey: o};
     [[NSNotificationCenter defaultCenter] postNotificationName:S3OperationQueueOperationInformationalStatusDidChangeNotification object:self userInfo:dict];
 }
 
 - (void)operationInformationalSubStatusDidChange:(S3Operation *)o
 {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:o, S3OperationObjectKey, nil];
+    NSDictionary *dict = @{S3OperationObjectKey: o};
     [[NSNotificationCenter defaultCenter] postNotificationName:S3OperationQueueOperationInformationalSubStatusDidChangeNotification object:self userInfo:dict];
 }
 

@@ -35,7 +35,7 @@
 	NSString *k;
 	while (k = [e nextObject])
 	{
-		[a addObject:[NSDictionary dictionaryWithObjectsAndKeys:k,@"key",[[self allHeaderFields] objectForKey:k],@"value",nil]];
+		[a addObject:@{@"key": k,@"value": [[self allHeaderFields] objectForKey:k]}];
 	}
 	return a;
 }
@@ -51,7 +51,7 @@
 	NSString *k;
 	while (k = [e nextObject])
 	{
-		[a addObject:[NSDictionary dictionaryWithObjectsAndKeys:k,@"key",[[self allHTTPHeaderFields] objectForKey:k],@"value",nil]];
+		[a addObject:@{@"key": k,@"value": [[self allHTTPHeaderFields] objectForKey:k]}];
 	}
 	return a;
 }

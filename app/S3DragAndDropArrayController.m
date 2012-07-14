@@ -14,7 +14,7 @@
 - (void)awakeFromNib
 {
 	[super awakeFromNib];
-    [tableView registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, nil]];
+    [tableView registerForDraggedTypes:@[NSFilenamesPboardType]];
 }
 
 - (void)setFileOperationsDelegate:(id)d

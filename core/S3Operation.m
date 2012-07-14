@@ -107,7 +107,7 @@ static void myReleaseCallback(void *info) {
 
 + (void)initialize
 {
-    [self setKeys:[NSArray arrayWithObjects:@"state", nil] triggerChangeNotificationsForDependentKey:@"active"];
+    [self setKeys:@[@"state"] triggerChangeNotificationsForDependentKey:@"active"];
 }
 
 - (id)initWithConnectionInfo:(S3ConnectionInfo *)aConnectionInfo operationInfo:(NSDictionary *)anOperationInfo
@@ -386,7 +386,7 @@ static void myReleaseCallback(void *info) {
         return;
     }
     
-	NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:@"This operation has been cancelled",NSLocalizedDescriptionKey,nil];
+	NSDictionary *d = @{NSLocalizedDescriptionKey: @"This operation has been cancelled"};
 	[self setError:[NSError errorWithDomain:S3_ERROR_DOMAIN code:-1 userInfo:d]];
     
     CFReadStreamSetClient(httpOperationReadStream, 0, NULL, NULL);
@@ -588,7 +588,7 @@ static void myReleaseCallback(void *info) {
     if (headerMessage != NULL) {
         // Get the HTTP status code
         statusCode = CFHTTPMessageGetResponseStatusCode(headerMessage);
-        [self setResponseStatusCode:[NSNumber numberWithLong:statusCode]];
+        [self setResponseStatusCode:@(statusCode)];
         
         NSDictionary *headerDict = (NSDictionary *)CFHTTPMessageCopyAllHeaderFields(headerMessage);
         if (headerDict != nil) {
@@ -716,7 +716,7 @@ static void myReleaseCallback(void *info) {
 {
     NSError* aError = nil;
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:[NSNumber numberWithInt:status] forKey:S3_ERROR_HTTP_STATUS_KEY];
+    [dictionary setObject:@(status) forKey:S3_ERROR_HTTP_STATUS_KEY];
     
     NSArray *a;
     NSXMLDocument *d = [[[NSXMLDocument alloc] initWithData:aData options:NSXMLDocumentTidyXML error:&error] autorelease];

@@ -34,15 +34,15 @@
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [NSArray arrayWithObjects: NSToolbarSeparatorItemIdentifier,
+	return @[NSToolbarSeparatorItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
 		NSToolbarFlexibleSpaceItemIdentifier,
-		@"Stop", @"Remove", @"Info", nil];
+		@"Stop", @"Remove", @"Info"];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-	return [NSArray arrayWithObjects: @"Info", @"Remove", NSToolbarFlexibleSpaceItemIdentifier, @"Stop", nil]; 
+	return @[@"Info", @"Remove", NSToolbarFlexibleSpaceItemIdentifier, @"Stop"]; 
 }
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem

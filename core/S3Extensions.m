@@ -127,7 +127,7 @@
 
 - (NSNumber *)longLongNumber
 {
-	return [NSNumber numberWithLongLong:[[self stringValue] longLongValue]];
+	return @([[self stringValue] longLongValue]);
 }
 
 - (NSNumber *)boolNumber
@@ -246,7 +246,7 @@
 {
 	NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:self traverseLink:YES];
 	if (fileAttributes==nil)
-		return [NSNumber numberWithLongLong:0];
+		return @0LL;
     else
         return [fileAttributes objectForKey:NSFileSize];
 }
