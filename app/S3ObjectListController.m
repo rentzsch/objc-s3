@@ -305,20 +305,25 @@
 
 - (IBAction)download:(id)sender
 {
-    S3Object *b;
-    NSEnumerator *e = [[_objectsController selectedObjects] objectEnumerator];
+    NSArray* selectedObjects = [_objectsController selectedObjects];
         
-    while (b = [e nextObject])
+    for(S3Object* b in selectedObjects)
     {
         NSSavePanel *sp = [NSSavePanel savePanel];
-        NSInteger runResult = 0;
         NSString *n = [[b key] lastPathComponent];
         if (n==nil) n = @"Untitled";
-        runResult = [sp runModalForDirectory:nil file:n];
-        if (runResult == NSOKButton) {
-            S3DownloadObjectOperation *op = [[S3DownloadObjectOperation alloc] initWithConnectionInfo:[self connectionInfo] object:b saveTo:[sp filename]];
-            [self addToCurrentOperations:op];
-        }
+        
+        __weak S3ObjectListController* _weakself = self;
+        [sp beginWithCompletionHandler:^(NSInteger result) {
+            if (result == NSOKButton)
+        {
+                S3DownloadObjectOperation *op = [[S3DownloadObjectOperation alloc] initWithConnectionInfo:[self connectionInfo]
+                                                                                                   object:b
+                                                                                                   saveTo:[[sp URL] path]];
+                [_weakself addToCurrentOperations:op];
+            }
+        }];
+        
     }
 }
 
@@ -387,7 +392,17 @@
     [oPanel setAllowsMultipleSelection:YES];
     [oPanel setPrompt:NSLocalizedString(@"Upload",nil)];
     [oPanel setCanChooseDirectories:TRUE];
-    [oPanel beginForDirectory:nil file:nil types:nil modelessDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+    
+    __weak S3ObjectListController* _weakself = self;
+    [oPanel beginWithCompletionHandler:^(NSInteger result) {
+        NSArray* urls = [oPanel URLs];
+        
+        if (result != NSOKButton) {
+            return;
+        }
+        
+        [_weakself importURLs:urls withDialog:TRUE];
+    }];
 }
 
 - (void)didEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -404,10 +419,10 @@
     return [[NSFileManager defaultManager] isReadableFileAtPath:path];
 }
 
-- (void)importFiles:(NSArray *)files withDialog:(BOOL)dialog
+- (void)importURLs:(NSArray *)urls withDialog:(BOOL)dialog
 {
     // First expand directories and only keep paths to files
-    NSArray *paths = [files expandPaths];
+    NSArray *paths = [urls expandPaths];
         
     NSString *path;
     NSMutableArray *filesInfo = [NSMutableArray array];
@@ -448,17 +463,6 @@
     }
 }
 
-
-- (void)openPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    NSArray *files = [panel filenames];
-    
-    if (returnCode != NSOKButton) {
-        return;
-    }
-
-    [self importFiles:files withDialog:TRUE];
-}
 
 - (void)didEndRenameSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {

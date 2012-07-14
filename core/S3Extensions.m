@@ -12,15 +12,15 @@
 
 @implementation NSArray (Comfort)
 
-- (NSArray *)expandPaths
+- (NSArray *) expandPaths
 {
 	NSMutableArray *a = [NSMutableArray array];
-	NSEnumerator *e = [self objectEnumerator];
-	NSString *path;
 	BOOL dir;
 	
-	while(path = [e nextObject])
+	for(id pathOrURL in self)
 	{
+        NSString* path = ([pathOrURL isKindOfClass:[NSURL class]]) ? [pathOrURL path] : pathOrURL;
+        
 		if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&dir])
 		{		
 			if (!dir)

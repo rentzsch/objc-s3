@@ -3,6 +3,7 @@
 //  S3-Objc
 //
 //  Created by Michael Ledford on 11/20/08.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2008 Michael Ledford. All rights reserved.
 //
 
@@ -12,8 +13,6 @@
 static NSString *S3OperationInfoDeleteBucketOperationBucketKey = @"S3OperationInfoDeleteBucketOperationBucketKey";
 
 @implementation S3DeleteBucketOperation
-
-@dynamic bucket;
 
 - (id)initWithConnectionInfo:(S3ConnectionInfo *)theConnectionInfo bucket:(S3Bucket *)b
 {

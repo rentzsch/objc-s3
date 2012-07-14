@@ -3,6 +3,7 @@
 //  S3-Objc
 //
 //  Created by Michael Ledford on 12/11/09.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2009 Michael Ledford. All rights reserved.
 //
 
