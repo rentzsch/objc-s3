@@ -4,7 +4,9 @@
 //
 //  Created by Olivier Gutknecht on 3/15/06.
 //  Re-imagined by Michael Ledford on 12/7/08.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2006 Olivier Gutknecht. All rights reserved.
+//
 //
 
 #import <Cocoa/Cocoa.h>
@@ -37,12 +39,7 @@ extern NSString *S3ObjectMetadataLastModifiedKey;
 extern NSString *S3ObjectMetadataOwnerKey;
 extern NSString *S3ObjectMetadataStorageClassKey;
 
-@interface S3Object : NSObject {
-    NSString *_key;
-	S3Bucket *_bucket;
-	NSDictionary *_metadata;
-	NSDictionary *_dataSourceInfo;
-}
+@interface S3Object : NSObject
 
 // Initializes an S3Object with the bucket it is contained in, the key that identifies it in that bucket, user 
 // defined metadata and metadata that is stored along with the object and a data source that provides the data

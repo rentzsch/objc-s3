@@ -26,11 +26,12 @@ NSString *AWSRegionEUIrelandValue = @"EU";
 @end
 
 
-@implementation AWSRegion
+@implementation AWSRegion {
+    NSString *regionKey;
+    AWSProductFlags availableServices;
+}
 
-@synthesize regionKey;
 @dynamic regionValue;
-@synthesize availableServices;
 
 // TODO: flyweight pattern the results
 

@@ -57,9 +57,9 @@ static NSString *S3OperationInfoAddObjectOperationObjectKey = @"S3OperationInfoA
     return [object metadata];
 }
 
-- (BOOL)virtuallyHostedCapable
+- (BOOL)isVirtuallyHostedCapable
 {
-	return [[[self object] bucket] virtuallyHostedCapable];
+	return [[[self object] bucket] isVirtuallyHostedCapable];
 }
 
 - (NSString *)bucketName

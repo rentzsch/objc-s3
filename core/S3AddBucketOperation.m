@@ -69,9 +69,9 @@ static NSString *S3LocationFormatString = @"<CreateBucketConfiguration><Location
     return @"PUT";
 }
 
-- (BOOL)virtuallyHostedCapable
+- (BOOL)isVirtuallyHostedCapable
 {
-	return [[self bucket] virtuallyHostedCapable];
+	return [[self bucket] isVirtuallyHostedCapable];
 }
 
 - (NSString *)bucketName

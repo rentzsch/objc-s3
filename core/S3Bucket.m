@@ -3,6 +3,7 @@
 //  S3-Objc
 //
 //  Created by Olivier Gutknecht on 3/15/06.
+//  Modernized by Martin Hering on 07/14/12
 //  Copyright 2006 Olivier Gutknecht. All rights reserved.
 //
 
@@ -10,10 +11,12 @@
 #import "S3Extensions.h"
 #import "S3ListBucketOperation.h"
 
-@interface S3Bucket (S3BucketPrivateAPI)
-- (void)setCreationDate:(NSDate *)aCreationDate;
-- (void)setName:(NSString *)aName;
-- (void)setVirtuallyHostedCapable:(BOOL)b;
+@interface S3Bucket ()
+
+@property (nonatomic, readwrite) NSDate* creationDate;
+@property (nonatomic, readwrite) NSString* name;
+@property (nonatomic, readwrite, getter=isVirtuallyHostedCapable) BOOL virtuallyHostedCapable;
+
 + (BOOL)isDNSComptatibleName:(NSString*)name;
 @end
 
@@ -63,36 +66,6 @@
 	return [[name lowercaseString] isEqualToString:name];
 }
 
-- (BOOL)virtuallyHostedCapable
-{
-	return _virtuallyHostedCapable;
-}
-
-- (void)setVirtuallyHostedCapable:(BOOL)b
-{
-	_virtuallyHostedCapable = b;
-}
-
-- (NSDate *)creationDate
-{
-    return _creationDate; 
-}
-
-- (void)setCreationDate:(NSDate *)aCreationDate
-{
-    _creationDate = aCreationDate;
-}
-
-- (NSString *)name
-{
-    return _name; 
-}
-
-- (void)setName:(NSString *)aName
-{
-    _name = aName;
-}
-
 - (NSUInteger)hash
 {
     return [_name hash];
@@ -100,7 +73,7 @@
 
 - (BOOL)isEqual:(id)obj
 {
-    if ([obj isKindOfClass:[self class]] == YES) {
+    if ([obj isKindOfClass:[self class]]) {
         if ([[self name] isEqualToString:[obj name]]) {
             return YES;
         }

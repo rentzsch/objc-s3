@@ -15,6 +15,10 @@
 #import "S3OperationQueue.h"
 #import "S3OperationLog.h"
 
+@interface S3ActiveWindowController () <S3ConnectionInfoDelegate>
+
+@end
+
 @implementation S3ActiveWindowController
 
 - (void)awakeFromNib

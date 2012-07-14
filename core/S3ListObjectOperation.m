@@ -64,9 +64,9 @@ static NSString *S3OperationInfoListObjectOperationMarkerKey = @"S3OperationInfo
     return @"GET";
 }
 
-- (BOOL)virtuallyHostedCapable
+- (BOOL)isVirtuallyHostedCapable
 {
-	return [[self bucket] virtuallyHostedCapable];
+	return [[self bucket] isVirtuallyHostedCapable];
 }
 
 - (NSString *)bucketName
