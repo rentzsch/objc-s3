@@ -37,6 +37,6 @@
 - (NSString *)httpUrlBuilderWantsHost:(S3HTTPURLBuilder *)urlBuilder;
 - (NSString *)httpUrlBuilderWantsKey:(S3HTTPURLBuilder *)urlBuilder; // Does not require '/' as its first char
 - (NSDictionary *)httpUrlBuilderWantsQueryItems:(S3HTTPURLBuilder *)urlBuilder;
-- (int)httpUrlBuilderWantsPort:(S3HTTPURLBuilder *)urlBuilder;
+- (NSUInteger)httpUrlBuilderWantsPort:(S3HTTPURLBuilder *)urlBuilder;
 
 @end

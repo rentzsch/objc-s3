@@ -166,7 +166,7 @@ NSString *S3OperationObjectForRetryKey = @"S3OperationObjectForRetryKey";
 	_timer = NULL;	
 }
 
-- (int)canAcceptPendingOperations
+- (NSUInteger)canAcceptPendingOperations
 {
 	NSInteger available = MAX_ACTIVE_OPERATIONS; // fallback
     if (_delegate && [_delegate respondsToSelector:@selector(maximumNumberOfSimultaneousOperationsForOperationQueue:)]) {

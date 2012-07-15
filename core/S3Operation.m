@@ -226,7 +226,7 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     return [self protocolScheme];
 }
 
-- (int)httpUrlBuilderWantsPort:(S3HTTPURLBuilder *)httpUrlBuilder
+- (NSUInteger)httpUrlBuilderWantsPort:(S3HTTPURLBuilder *)httpUrlBuilder
 {
     return [self portNumber];
 }
@@ -257,7 +257,7 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     return @"http";
 }
 
-- (int)portNumber
+- (NSUInteger)portNumber
 {
     return [[self connectionInfo] portNumber];
 }

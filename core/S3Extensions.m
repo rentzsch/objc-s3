@@ -330,7 +330,7 @@
 
 + (NSString *)commonPrefixWithStrings:(NSArray *)strings
 {
-	int sLength = [strings count];
+	NSUInteger sLength = [strings count];
 	int i,j;
 	
 	if (sLength == 1)
@@ -338,7 +338,7 @@
 	else 
 	{
 		NSString* prefix = [strings objectAtIndex:0];
-		int maxLength = [prefix length];
+		NSUInteger maxLength = [prefix length];
 		
 		for (i = 1; i < sLength; i++)
 			if ([[strings objectAtIndex:i] length] < maxLength)
