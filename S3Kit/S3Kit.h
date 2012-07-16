@@ -15,7 +15,7 @@
 #import <S3Kit/S3Operation.h>
 #import <S3Kit/S3OperationQueue.h>
 #import <S3Kit/S3TransferRateCalculator.h>
-#import <S3Kit/S3PeristentCFReadStreamPool.h>
+#import <S3Kit/S3PersistentCFReadStreamPool.h>
 #import <S3Kit/S3HTTPURLBuilder.h>
 #import <S3Kit/S3Owner.h>
 #import <S3Kit/S3ACL.h>

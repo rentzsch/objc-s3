@@ -85,4 +85,9 @@
     return self;
 }
 
+- (NSString*) description
+{
+    return [NSString stringWithFormat:@"<S3Bucket: 0x%lx; name='%@'; created=%@>", (long)self, self.name, self.creationDate];
+}
+
 @end

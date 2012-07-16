@@ -53,6 +53,7 @@
 		1B6DBA9815B2C13100718490 /* S3CopyObjectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EC5DB4BF10D35A5500E728BA /* S3CopyObjectOperation.m */; };
 		1B6DBA9915B2C28000718490 /* S3Kit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6DBA5E15B2C11D00718490 /* S3Kit.framework */; };
 		1B6DBA9F15B2C39E00718490 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6DBA9E15B2C39D00718490 /* Security.framework */; };
+		1BB272ED15B4168C0036B70B /* S3Kit.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B6DBA6915B2C11E00718490 /* S3Kit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		301E14880A9487B000452AD5 /* S3DragAndDropArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 301E14870A9487B000452AD5 /* S3DragAndDropArrayController.m */; };
 		306299E50A953E0A00634B34 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 306299E40A953E0A00634B34 /* SystemConfiguration.framework */; };
 		3066A6AA0AAB608F003CACDA /* S3ActiveWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3066A6A90AAB608F003CACDA /* S3ActiveWindowController.m */; };
@@ -508,6 +509,7 @@
 				1B6DBA8515B2C12900718490 /* S3ACL.h in Headers */,
 				1B6DBA8715B2C12900718490 /* S3Extensions.h in Headers */,
 				1B6DBA8915B2C12E00718490 /* S3AddBucketOperation.h in Headers */,
+				1BB272ED15B4168C0036B70B /* S3Kit.h in Headers */,
 				1B6DBA8B15B2C12E00718490 /* S3DeleteBucketOperation.h in Headers */,
 				1B6DBA8D15B2C12E00718490 /* S3ListBucketOperation.h in Headers */,
 				1B6DBA8F15B2C13100718490 /* S3ListObjectOperation.h in Headers */,
@@ -796,6 +798,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "S3Kit/S3Kit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/lib/system\"",
@@ -811,6 +814,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -826,6 +831,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "S3Kit/S3Kit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/lib/system\"",
@@ -974,6 +980,7 @@
 				1B6DBA6E15B2C11E00718490 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		65CDE8CC0C104656007CB0EF /* Build configuration list for PBXNativeTarget "s3util" */ = {
 			isa = XCConfigurationList;

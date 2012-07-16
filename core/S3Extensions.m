@@ -261,6 +261,8 @@
     return [[fileAttributes objectForKey:NSFileSize] readableFileSize];
 }
 
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (NSString *)mimeTypeForPath
 {
 	FSRef fsRef;

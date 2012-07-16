@@ -123,7 +123,8 @@ ReadStreamClientCallBack(CFReadStreamRef stream, CFStreamEventType type, void *c
     [self removeObserver:self forKeyPath:@"informationalSubStatus"];
     
     if (httpOperationReadStream != NULL) {
-        CFRelease(httpOperationReadStream);        
+        CFRelease(httpOperationReadStream);
+        httpOperationReadStream = NULL;
     }
 
 }

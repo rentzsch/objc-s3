@@ -24,7 +24,7 @@ NSString *S3ObjectMetadataContentLengthKey = @"content-length";
 NSString *S3ObjectMetadataETagKey = @"etag";
 NSString *S3ObjectMetadataLastModifiedKey = @"last-modified";
 NSString *S3ObjectMetadataOwnerKey = @"owner";
-NSString *S3ObjectMetadataStorageClassKey = @"storageclass";
+NSString *S3ObjectMetadataStorageClassKey = @"x-amz-storage-class";
 
 @interface S3Object ()
 
