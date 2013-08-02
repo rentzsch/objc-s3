@@ -20,7 +20,8 @@
 #import "S3Extensions.h"
 
 
-NSString *S3DefaultHostString = @"s3.amazonaws.com";
+//NSString *S3DefaultHostString = @"s3.amazonaws.com";
+NSString *S3DefaultHostString = @"objects.dreamhost.com";
 NSInteger S3DefaultInsecurePortInteger = 80;
 NSInteger S3DefaultSecurePortInteger = 443;
 NSString *S3InsecureHTTPProtocolString = @"http";
